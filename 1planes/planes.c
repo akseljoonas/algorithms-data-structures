@@ -2,7 +2,7 @@
 // version     : 0.2
 // author(s)      : Mihkel Mariusz Jezierski (m.m.jezierski@student.rug.nl) & Aksel Joonas Reedi (a.j.reedi@student.rug.nl)
 // date        : Fri Feb 10 2023
-// compilation : gcc -std=c99 -Wall -pedantic -lm planes.c -o planes
+// compilation : gcc -std=c99 -Wall -pedantic -lm planes.c stack.c queue.c -o planes
 
 
 /* description of the program: */
@@ -16,51 +16,82 @@
 #include "stack.h"
 #include "queue.h"
 #define RUNWAY_CAPACITY 7
-#define GARAGE_CAPACITY 5
+#define HANGAR_CAPACITY 5
 
-// wadevatumpsik1§
-// wadeva komment
+
 
 int main(int argc, char *argv[]) {
 	Queue *waitingRunway = newQueue(RUNWAY_CAPACITY);
-	Stack *hangar = newStack(GARAGE_CAPACITY);
+	Stack *hangar = newStack(HANGAR_CAPACITY);
 	int planeIndex = 0;
 	int numOfPlanesInHangar = 0;
 	int numOfPlanesOnRunway = 0;
 	char repairs[3];
-	char yes[] = "Yes";
 	
 	while (planeIndex != -1) {
-		scanf("%d %s", &planeIndex, repairs);
-		printf("%d %s\n", planeIndex, repairs);
+		// getting plane index number (name) and checking if it needs repairs or not (goes to hangar or waiting runway)
+		scanf("%d", &planeIndex);
+        if (planeIndex == -1) {
+			break;
+		}
+		scanf("%s", repairs);
 
-			if (strcmp(repairs, no)) { // if repairs str is longer than 'no' then push into hangar
+		if (!strcmp(repairs, "yes")) {
 			push(planeIndex, hangar);
-			currentHangarOc++;
+			numOfPlanesInHangar++;
+			printf("plane %d moved to hangar\n", hangar.array[hangar.top]);
 		} else {
 			enqueue(planeIndex, waitingRunway);
-			currentRunwayOc++;
+			numOfPlanesOnRunway++;
+			printf("plane %d moved to the waiting runway\n", waitingRunway.array[waitingRunway.front]) ;
 		}
 
-		if (currentRunwayOc == RUNWAY_CAPACITY) {
-			//for // every plane in the queue, dequeue
+		// if the runway is at full capacity, all planes are let to depart
+		if (numOfPlanesOnRunway == RUNWAY_CAPACITY) {
+			for (int i = 0; i<RUNWAY_CAPACITY; i++) {
+					printf("%d\n", dequeue(waitingRunway));
+				}
+			// all planes have left the runway
+			numOfPlanesOnRunway = 0;
+		}
 
+		// if the hangar is full, all planes from the runway depart, and all planes from the hangar exit outside to the runway
+		if (numOfPlanesInHangar == HANGAR_CAPACITY) {
+
+			for (int i = 0; i<numOfPlanesOnRunway; i++) {
+					printf("%d\n", dequeue(waitingRunway));
+				}
+			numOfPlanesOnRunway = 0;
+
+			for (int i = 0; i<HANGAR_CAPACITY; i++) {
+				enqueue(pop(hangar), waitingRunway);
 			}
-
-		if (currentHangarOc == GARAGE_CAPACITY) {
-			//for // every plane in the queue, dequeue
-			//for // every plane in the hangar, add to queue
-			// kas sa näed seda v?
-			// 2
+			numOfPlanesInHangar = 0;
 		}
 	}
+	
 
-	if (currentHangarOc > 0) {
-		//for // every plane in the hangar, add to queue
-		//for // very plane in the queue, dequeue
+	if (numOfPlanesOnRunway > 0) {
+		for (int i = 0; i<numOfPlanesOnRunway; i++) {
+		printf("%d\n", dequeue(waitingRunway));
+		}
+		numOfPlanesOnRunway = 0;
 	}
-	*/
+
+	if (numOfPlanesInHangar > 0) {
+		for (int i = 0; i<numOfPlanesInHangar; i++) {
+			enqueue(pop(hangar), waitingRunway);
+			numOfPlanesOnRunway++;
+		}
+		numOfPlanesInHangar = 0;
+
+		for (int i = 0; i<numOfPlanesOnRunway; i++) {
+			printf("%d\n", dequeue(waitingRunway));
+		}
+		numOfPlanesOnRunway = 0;
+	}
+	
 
 	return 0;
 }
-}
+
