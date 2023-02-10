@@ -12,9 +12,8 @@
 #include <assert.h>  // enables the use of assertions
 #include <math.h>    // math functions
 #include <string.h>  // enables string library, e.g. strlen(str)
-
-#include "stack.h"
-#include "queue.h"
+//#include "stack.h"
+//#include "queue.h"
 #define RUNWAY_CAPACITY 7
 #define GARAGE_CAPACITY 5
 
@@ -24,17 +23,14 @@ int main(int argc, char *argv[]) {
 	Queue *waitingRunway = newQueue(RUNWAY_CAPACITY);
 	Stack *hangar = newStack(GARAGE_CAPACITY);
 	int planeIndex = 0;
-	int numOfPlanesInHangar = 0;
-	int numOfPlanesOnRunway = 0;
-	char repairs[3];
-	char yes[] = "Yes";
-	
+	int currentHangarOc = 0;
+	int currentRunwayOc = 0;
+	char *repairs; 
+	char no[] = "No";
 	while (planeIndex != -1) {
 		scanf("%d %s", &planeIndex, repairs);
-		printf("%d %s\n", planeIndex, repairs);
 
-<<<<<<< HEAD
-		if (strcmp(repairs, no)) { // if repairs str is longer than 'no' then push into hangar
+		if (strcmp(repairs, no)) {
 			push(planeIndex, hangar);
 			currentHangarOc++;
 		} else {
@@ -43,49 +39,22 @@ int main(int argc, char *argv[]) {
 		}
 
 		if (currentRunwayOc == RUNWAY_CAPACITY) {
-			//for // every plane in the queue, dequeue
-=======
-		
- /*
-		if (strcmp(repairs, "Yes")) {
-				push(planeIndex, hangar);
-				numOfPlanesInHangar++;
-			} else {
-				enqueue(planeIndex, waitingRunway);
-				numOfPlanesOnRunway++;
-			}
+			for // every plane in the queue, dequeue
 
-			if (numOfPlanesOnRunway == RUNWAY_CAPACITY) {
-				for // every plane in the queue, dequeue
->>>>>>> 1044db51983f2f7177b7f5a01726f0a55daad0dd
-
-			}
+		}
 
 		if (currentHangarOc == GARAGE_CAPACITY) {
-<<<<<<< HEAD
-			//for // every plane in the queue, dequeue
-			//for // every plane in the hangar, add to queue
+			for // every plane in the queue, dequeue
+			for // every plane in the hangar, add to queue
 			// kas sa näed seda v?
 			// 2
 		}
 	}
 
 	if (currentHangarOc > 0) {
-		//for // every plane in the hangar, add to queue
-		//for // very plane in the queue, dequeue
-=======
-			for // every plane in the queue, dequeue
-			for // every plane in the hangar, add to queue
-		}
-	}
-	
-	if (numOfPlanesInHangar > 0) {
 		for // every plane in the hangar, add to queue
 		for // very plane in the queue, dequeue
->>>>>>> 1044db51983f2f7177b7f5a01726f0a55daad0dd
 	}
-	*/
 
 	return 0;
-}
 }
