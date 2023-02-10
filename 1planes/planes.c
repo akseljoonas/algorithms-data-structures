@@ -33,8 +33,7 @@ int main(int argc, char *argv[]) {
 		scanf("%d %s", &planeIndex, repairs);
 		printf("%d %s\n", planeIndex, repairs);
 
-<<<<<<< HEAD
-		if (strcmp(repairs, no)) { // if repairs str is longer than 'no' then push into hangar
+			if (strcmp(repairs, no)) { // if repairs str is longer than 'no' then push into hangar
 			push(planeIndex, hangar);
 			currentHangarOc++;
 		} else {
@@ -44,25 +43,10 @@ int main(int argc, char *argv[]) {
 
 		if (currentRunwayOc == RUNWAY_CAPACITY) {
 			//for // every plane in the queue, dequeue
-=======
-		
- /*
-		if (strcmp(repairs, "Yes")) {
-				push(planeIndex, hangar);
-				numOfPlanesInHangar++;
-			} else {
-				enqueue(planeIndex, waitingRunway);
-				numOfPlanesOnRunway++;
-			}
-
-			if (numOfPlanesOnRunway == RUNWAY_CAPACITY) {
-				for // every plane in the queue, dequeue
->>>>>>> 1044db51983f2f7177b7f5a01726f0a55daad0dd
 
 			}
 
 		if (currentHangarOc == GARAGE_CAPACITY) {
-<<<<<<< HEAD
 			//for // every plane in the queue, dequeue
 			//for // every plane in the hangar, add to queue
 			// kas sa näed seda v?
@@ -73,16 +57,6 @@ int main(int argc, char *argv[]) {
 	if (currentHangarOc > 0) {
 		//for // every plane in the hangar, add to queue
 		//for // very plane in the queue, dequeue
-=======
-			for // every plane in the queue, dequeue
-			for // every plane in the hangar, add to queue
-		}
-	}
-	
-	if (numOfPlanesInHangar > 0) {
-		for // every plane in the hangar, add to queue
-		for // very plane in the queue, dequeue
->>>>>>> 1044db51983f2f7177b7f5a01726f0a55daad0dd
 	}
 	*/
 
