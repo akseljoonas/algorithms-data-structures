@@ -1,21 +1,59 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+// file        : planes.c
+// version     : 0.2
+// author(s)      : Mihkel Mariusz Jezierski (m.m.jezierski@student.rug.nl) & Aksel Joonas Reedi (a.j.reedi@student.rug.nl)
+// date        : Fri Feb 10 2023
+// compilation : gcc -std=c99 -Wall -pedantic -lm planes.c -o planes
 
-/* This imports the type and function declarations for the linear data
- * structures presented in the first lecture: stacks, queues and lists.
- *
- * Feel free to remove any includes you do not need!
- */
-#include "stack.h"
-#include "queue.h"
-#include "list.h"
+
+/* description of the program: */
+
+#include <stdio.h>   // endables input/output commands
+#include <stdlib.h>  // enables standard library of functions
+#include <assert.h>  // enables the use of assertions
+#include <math.h>    // math functions
+#include <string.h>  // enables string library, e.g. strlen(str)
+
+//#include "stack.h"
+//#include "queue.h"
 #define RUNWAY_CAPACITY 7
 #define GARAGE_CAPACITY 5
 
-// add your code here
+
 
 int main(int argc, char *argv[]) {
-	// add your code here
+	Queue *waitingRunway = newQueue(RUNWAY_CAPACITY);
+	Stack *hangar = newStack(GARAGE_CAPACITY);
+	int planeIndex = 0;
+	int currentHangarOc = 0;
+	int currentRunwayOc = 0;
+	char *repairs; 
+	char no[] = "No";
+	while (planeIndex != -1) {
+		scanf("%d %s", &planeIndex, repairs);
+
+		if (strcmp(repairs, no)) {
+			push(planeIndex, hangar);
+			currentHangarOc++;
+		} else {
+			enqueue(planeIndex, waitingRunway);
+			currentRunwayOc++;
+		}
+
+		if (currentRunwayOc == RUNWAY_CAPACITY) {
+			for // every plane in the queue, dequeue
+
+		}
+
+		if (currentHangarOc == GARAGE_CAPACITY) {
+			for // every plane in the queue, dequeue
+			for // every plane in the hangar, add to queue
+		}
+	}
+
+	if (currentHangarOc > 0) {
+		for // every plane in the hangar, add to queue
+		for // very plane in the queue, dequeue
+	}
+
 	return 0;
 }
