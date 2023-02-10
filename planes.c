@@ -48,6 +48,7 @@ int main(int argc, char *argv[]) {
 			for // every plane in the queue, dequeue
 			for // every plane in the hangar, add to queue
 			// kas sa näed seda v?
+			// 2
 		}
 	}
 
