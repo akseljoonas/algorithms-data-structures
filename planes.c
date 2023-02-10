@@ -12,7 +12,6 @@
 #include <assert.h>  // enables the use of assertions
 #include <math.h>    // math functions
 #include <string.h>  // enables string library, e.g. strlen(str)
-
 //#include "stack.h"
 //#include "queue.h"
 #define RUNWAY_CAPACITY 7
