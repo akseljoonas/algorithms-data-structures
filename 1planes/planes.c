@@ -47,6 +47,8 @@ int main(int argc, char *argv[]) {
 		if (currentHangarOc == GARAGE_CAPACITY) {
 			for // every plane in the queue, dequeue
 			for // every plane in the hangar, add to queue
+			// kas sa näed seda v?
+			// 2
 		}
 	}
 
