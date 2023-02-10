@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 			for // every plane in the hangar, add to queue
 		}
 	}
-	/*
+	
 	if (numOfPlanesInHangar > 0) {
 		for // every plane in the hangar, add to queue
 		for // very plane in the queue, dequeue
@@ -61,4 +61,5 @@ int main(int argc, char *argv[]) {
 	*/
 
 	return 0;
+}
 }
