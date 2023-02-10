@@ -48,13 +48,10 @@ int main(int argc, char *argv[]) {
 
 			}
 
-
-		if (numOfPlanesInHangar == GARAGE_CAPACITY) {
-				for // every plane in the queue, dequeue
-				for // every plane in the hangar, add to queue
-			}
- */
-		
+		if (currentHangarOc == GARAGE_CAPACITY) {
+			for // every plane in the queue, dequeue
+			for // every plane in the hangar, add to queue
+		}
 	}
 	/*
 	if (numOfPlanesInHangar > 0) {
