@@ -19,6 +19,7 @@
 #define GARAGE_CAPACITY 5
 
 // wadevatumpsik1§
+// wadeva komment
 
 int main(int argc, char *argv[]) {
 	Queue *waitingRunway = newQueue(RUNWAY_CAPACITY);
