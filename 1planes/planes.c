@@ -72,8 +72,10 @@ int main(int argc, char *argv[]) {
 			numOfPlanesOnRunway = 0;
 
 			for (int i = 0; i<HANGAR_CAPACITY; i++) {
-				enqueue(pop(hangar), waitingRunway);
+				int checkVariable = pop(hangar);
+				enqueue(checkVariable, waitingRunway);
 				//printf("plane %d moved out of hangar to the runway\n", checkVariable);
+				numOfPlanesOnRunway++;
 			}
 			numOfPlanesInHangar = 0;
 		}
@@ -83,9 +85,8 @@ int main(int argc, char *argv[]) {
 	if (numOfPlanesOnRunway > 0) {
 		for (int i = 0; i<numOfPlanesOnRunway; i++) {
 		printf("%d\n", dequeue(waitingRunway));
-		numOfPlanesOnRunway--;
 		}
-	
+	numOfPlanesOnRunway = 0;
 	}
 
 	if (numOfPlanesInHangar > 0) {
@@ -103,7 +104,8 @@ int main(int argc, char *argv[]) {
 		numOfPlanesOnRunway = 0;
 	}
 
-	
+	freeQueue(waitingRunway);
+	freeStack(hangar);	
 	
 
 	return 0;
