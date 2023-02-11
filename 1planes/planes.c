@@ -15,40 +15,32 @@
 
 #include "stack.h"
 #include "queue.h"
+
+// 0 for assertions on, 1 for assertions off
+#if 0
+#define NDEBUG
+#endif
+
 #define RUNWAY_CAPACITY 7
 #define HANGAR_CAPACITY 5
-
-
-typedef struct stack {
-	int *array;
-	int top;
-	int size;
-} Stack;
-
-typedef struct queue {
-	int *array;
-	int back;
-	int front;
-	int size;
-}Queue;
 
 	int planeIndex = 0;
 	int numOfPlanesInHangar = 0;
 	int numOfPlanesOnRunway = 0;
-	char repairs[3];
+	char repairStatus[3];
 
 int main(int argc, char *argv[]) {
 	Queue *waitingRunway = newQueue(RUNWAY_CAPACITY);
 	Stack *hangar = newStack(HANGAR_CAPACITY);
 	while (planeIndex != -1) {
-		// getting plane index number (name) and checking if it needs repairs or not (goes to hangar or waiting runway)
+		// getting plane index number (name) and checking if it needs repairStatus or not (goes to hangar or waiting runway)
 		scanf("%d", &planeIndex);
         if (planeIndex == -1) {
 			break;
 		}
-		scanf("%s", repairs);
+		scanf("%s", repairStatus);
 
-		if (!strcmp(repairs, "yes")) {
+		if (!strcmp(repairStatus, "yes")) {
 			push(planeIndex, hangar);
 			numOfPlanesInHangar++;
 			//printf("plane %d moved to hangar\n", planeIndex);
@@ -80,7 +72,6 @@ int main(int argc, char *argv[]) {
 			numOfPlanesOnRunway = 0;
 
 			for (int i = 0; i<HANGAR_CAPACITY; i++) {
-				int checkVariable = pop(hangar);
 				enqueue(pop(hangar), waitingRunway);
 				//printf("plane %d moved out of hangar to the runway\n", checkVariable);
 			}
