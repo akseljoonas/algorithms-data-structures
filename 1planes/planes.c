@@ -1,7 +1,7 @@
 // file        : planes.c
-// version     : 0.2
-// author(s)      : Mihkel Mariusz Jezierski (m.m.jezierski@student.rug.nl) & Aksel Joonas Reedi (a.j.reedi@student.rug.nl)
-// date        : Fri Feb 10 2023
+// version     : 2.1
+// author(s)   : Mihkel Mariusz Jezierski (m.m.jezierski@student.rug.nl) & Aksel Joonas Reedi (a.j.reedi@student.rug.nl)
+// date        : Fri Feb 11 2023
 // compilation : gcc -std=c99 -Wall -pedantic -lm planes.c stack.c queue.c -o planes
 
 
@@ -12,7 +12,6 @@
 #include <assert.h>  // enables the use of assertions
 #include <math.h>    // math functions
 #include <string.h>  // enables string library, e.g. strlen(str)
-
 #include "stack.h"
 #include "queue.h"
 
@@ -32,7 +31,9 @@
 int main(int argc, char *argv[]) {
 	Queue *waitingRunway = newQueue(RUNWAY_CAPACITY);
 	Stack *hangar = newStack(HANGAR_CAPACITY);
-	while (planeIndex != -1) {
+
+	while (1) {
+
 		// getting plane index number (name) and checking if it needs repairStatus or not (goes to hangar or waiting runway)
 		scanf("%d", &planeIndex);
         if (planeIndex == -1) {
@@ -43,14 +44,9 @@ int main(int argc, char *argv[]) {
 		if (!strcmp(repairStatus, "yes")) {
 			push(planeIndex, hangar);
 			numOfPlanesInHangar++;
-			//printf("plane %d moved to hangar\n", planeIndex);
-			//printf("NumOfPlanesInHangar Counter: %d\n", numOfPlanesInHangar);
-			//printf("NumOfPlanesOnRunway Counter: %d\n", numOfPlanesOnRunway);
 		} else {
 			enqueue(planeIndex, waitingRunway);
 			numOfPlanesOnRunway++;
-			//printf("plane %d moved to the waiting runway\n", planeIndex);
-			//printf("NumOfPlanesOnRunway Counter: %d\n", numOfPlanesOnRunway);
 		}
 
 		// if the runway is at full capacity, all planes are let to depart
@@ -74,7 +70,6 @@ int main(int argc, char *argv[]) {
 			for (int i = 0; i<HANGAR_CAPACITY; i++) {
 				int checkVariable = pop(hangar);
 				enqueue(checkVariable, waitingRunway);
-				//printf("plane %d moved out of hangar to the runway\n", checkVariable);
 				numOfPlanesOnRunway++;
 			}
 			numOfPlanesInHangar = 0;
@@ -84,16 +79,15 @@ int main(int argc, char *argv[]) {
 	
 	if (numOfPlanesOnRunway > 0) {
 		for (int i = 0; i<numOfPlanesOnRunway; i++) {
-		printf("%d\n", dequeue(waitingRunway));
+			printf("%d\n", dequeue(waitingRunway));
 		}
-	numOfPlanesOnRunway = 0;
+		numOfPlanesOnRunway = 0;
 	}
 
 	if (numOfPlanesInHangar > 0) {
 		for (int i = 0; i<numOfPlanesInHangar; i++) {
 			int checkVariable = pop(hangar);
 			enqueue(checkVariable, waitingRunway);
-			//printf("plane %d moved out of hangar to the runway\n", checkVariable);
 			numOfPlanesOnRunway++;
 		}
 		numOfPlanesInHangar = 0;
@@ -106,8 +100,6 @@ int main(int argc, char *argv[]) {
 
 	freeQueue(waitingRunway);
 	freeStack(hangar);	
-	
 
 	return 0;
 }
-
