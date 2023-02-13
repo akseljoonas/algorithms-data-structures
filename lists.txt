@@ -1,0 +1,1 @@
+valgrind function tells u if all memory has been freed (also in themis)

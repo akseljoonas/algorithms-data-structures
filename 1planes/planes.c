@@ -30,6 +30,8 @@
 	char repairStatus[3];
 
 int main(int argc, char *argv[]) {
+
+
 	Queue *waitingRunway = newQueue(RUNWAY_CAPACITY);
 	Stack *hangar = newStack(HANGAR_CAPACITY);
 	while (planeIndex != -1) {
@@ -67,8 +69,8 @@ int main(int argc, char *argv[]) {
 		if (numOfPlanesInHangar == HANGAR_CAPACITY) {
 
 			for (int i = 0; i<numOfPlanesOnRunway; i++) {
-					printf("%d\n", dequeue(waitingRunway));
-				}
+				printf("%d\n", dequeue(waitingRunway));
+			}
 			numOfPlanesOnRunway = 0;
 
 			for (int i = 0; i<HANGAR_CAPACITY; i++) {
