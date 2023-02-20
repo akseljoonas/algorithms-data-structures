@@ -27,6 +27,8 @@
 char repairStatus[3];
 
 int main(int argc, char *argv[]) {
+
+
 	Queue *waitingRunway = newQueue(RUNWAY_CAPACITY);
 	Stack *hangar = newStack(HANGAR_CAPACITY);
 
@@ -66,8 +68,8 @@ int main(int argc, char *argv[]) {
 
 			// waiting runway is cleared
 			for (int i = 0; i<numOfPlanesOnRunway; i++) {
-					printf("%d\n", dequeue(waitingRunway));
-				}
+				printf("%d\n", dequeue(waitingRunway));
+			}
 			numOfPlanesOnRunway = 0;
 
 			// all planes from the hangar are moved to the waiting runway queue

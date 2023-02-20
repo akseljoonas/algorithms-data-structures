@@ -1,0 +1,10 @@
+valgrind function tells u if all memory has been freed (also in themis)
+terminal command: valgrind <file.c>
+
+first node in a list shouldnt contain data (in this course) and last element is \0 pointer
+lists can be used to implement stacks and queues (exams do this lol)
+
+
+enums are data types that make code more understandable u have to specify it with typedef
+
+unions are something have to look up slides. Used with enums.git 
