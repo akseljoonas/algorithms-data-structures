@@ -18,7 +18,7 @@
 // start of recognizeExp.c
 int acceptSymbol(char symbol, List **list) {
 	if (*list != NULL && (*list)->type == SYMBOL && ((*list)->token).symbol == symbol) {
-		*list = (*list)->next;
+		*list = (*list)->next;gi
 		return 1;
 	}
 	return 0;
