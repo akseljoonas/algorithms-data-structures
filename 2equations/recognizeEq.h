@@ -11,7 +11,12 @@
 
 #include "scanner.h"
 
-int isValidEquation(List *list);
+int isValidEquation(List *list){
+	// go throught the list
+		// check if have expression 
+			// check if have term
+
+};
 	// Return 1 if and only if the TokenList list is a valid equation
 
 int isSingleVariableEquation(List *list);

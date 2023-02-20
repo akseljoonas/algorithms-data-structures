@@ -18,7 +18,7 @@
 // start of recognizeExp.c
 int acceptSymbol(char symbol, List **list) {
 	if (*list != NULL && (*list)->type == SYMBOL && ((*list)->token).symbol == symbol) {
-		*list = (*list)->next;gi
+		*list = (*list)->next;
 		return 1;
 	}
 	return 0;
@@ -60,6 +60,14 @@ int acceptTerm(List **list) { // needs change according to excercise
 	while (acceptSymbol('*', list) || acceptSymbol('/', list)) {
 		// If we encounter a * or /, 
 		// it must be followed by another term
+        
+
+
+
+
+
+
+
 		if (!acceptFactor(list)) {
 			return 0;
 		}
@@ -74,6 +82,11 @@ int acceptExpression(List **list) { // needs change according to excercise
 	while (acceptSymbol('+', list) || acceptSymbol('-', list)) {
 		// If we encounter a + or -, 
 		// it must be followed by another term
+
+
+
+
+        
 		if (!acceptTerm(list)) {
 			return 0;
 		}
@@ -81,4 +94,6 @@ int acceptExpression(List **list) { // needs change according to excercise
 	return 1;
 }
 // end of recognizeExp.c
+
+// do equation test
 
