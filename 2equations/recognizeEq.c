@@ -52,6 +52,7 @@ int acceptTerm(List **list) { // needs change according to excercise
 		}
 	} else if (acceptIdentifier(list)) {
 			
+			
 		if(acceptSymbol('^', list)) {
 			return acceptNumber(list);
 		}
@@ -90,7 +91,7 @@ int acceptExpression(List **list) { // needs change according to excercise
 int isValidEquation(List *list) {
 	//printf("alustan esimese expressioniga\n");
 	if (acceptExpression(&list)) {
-		//printf("Esimene expression done!\n");
+		printf("Esimene expression done!\n");
 		if (acceptSymbol('=', &list)) {
 			//printf("Jõudsin peale esimest võrdus märki!\n");
 			//check if = again
