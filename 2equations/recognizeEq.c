@@ -45,38 +45,34 @@ int acceptNumber(List **list) {
 int acceptTerm(List **list) { // needs change according to excercise
 	if (acceptNumber(list)) { // putsis gray area
 		if (acceptIdentifier(list)) {
-			if (acceptSymbol("+", list)){
-				return 1;
-			}
-			 else if(acceptSymbol("⌃", list)) {
+			if(acceptSymbol('^', list)) {
 				return acceptNumber(list);
 			}
-		} else if (acceptSymbol("+", list)) {
-			return 1;
 		}
 	} else if (acceptIdentifier(list)) {
-		if (acceptSymbol("+", list)){
-				return 1;
-		} else if(acceptSymbol("⌃", list)) {
+			if(acceptSymbol('^', list)) {
 				return acceptNumber(list);
 		}
-	} else {
-		printf("!");
-		return 0;
-	} 
+	}
+		//printf("!\n");
+		return 1;
 }
 
 int acceptExpression(List **list) { // needs change according to excercise
-	// expression 1
-	while (acceptSymbol("=", list)) {
-		if (acceptTerm(list) == 0) {
-			return 0;
+	if (!acceptTerm(list)) {
+		if (acceptSymbol('-', list)) {
+			goto label_1;
 		}
-	}
-	// expression 2
-	while (acceptSymbol("\n", list)) {
-		if (acceptTerm(list) == 0) {
-			return 0;
+		//printf("returnin 0\n");
+		return 0;
+	} 
+
+	//printf("esimene term sisse võetud\n");
+	
+	while (acceptSymbol('+', list) || acceptSymbol('-', list)){
+		label_1:
+		if (!acceptTerm(list)){
+			return 0; 
 		}
 	}
 	
@@ -84,7 +80,15 @@ int acceptExpression(List **list) { // needs change according to excercise
 }
 
 int isValidEquation(List *list) {
-	return acceptExpression(&list);
+	//printf("alustan esimese expressioniga\n");
+	if (acceptExpression(&list)) {
+		//printf("Esimene expression done!\n");
+		if (acceptSymbol('=', &list)) {
+			//printf("Jõudsin peale võrdus märki!\n");
+			return acceptExpression(&list);
+		}
+	}
+	return 0;
 }
 	
 
