@@ -13,6 +13,8 @@
 #include "scanner.h"
 #include "scannerStructs.h"
 #include "recognizeEq.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 
 // start of recognizeExp.c
@@ -40,60 +42,56 @@ int acceptNumber(List **list) {
 	return 0;
 }
 
-int acceptFactor(List **list) {
-	if (acceptNumber(list)) {
-		return 1;
-	}
-	if (acceptIdentifier(list)) {
-		return 1;
-	}
-	if (acceptSymbol('(', list)) {
-		return acceptExpression(list) && acceptSymbol(')', list);
-	}
-	return 0;
-}
-
 int acceptTerm(List **list) { // needs change according to excercise
-	if (!acceptFactor(list)) {
-		return 0;
-	}
-	while (acceptSymbol('*', list) || acceptSymbol('/', list)) {
-		// If we encounter a * or /, 
-		// it must be followed by another term
-        
-
-
-
-
-
-
-
-		if (!acceptFactor(list)) {
-			return 0;
+	if (acceptNumber(list)) { // putsis gray area
+		if (acceptIdentifier(list)) {
+			if (acceptSymbol("+", list)){
+				return 1;
+			}
+			 else if(acceptSymbol("⌃", list)) {
+				return acceptNumber(list);
+			}
+		} else if (acceptSymbol("+", list)) {
+			return 1;
 		}
-	}
-	return 1;
+	} else if (acceptIdentifier(list)) {
+		if (acceptSymbol("+", list)){
+				return 1;
+		} else if(acceptSymbol("⌃", list)) {
+				return acceptNumber(list);
+		}
+	} else {
+		printf("!");
+		return 0;
+	} 
 }
 
 int acceptExpression(List **list) { // needs change according to excercise
-	if (!acceptTerm(list)) {
-		return 0;
-	}
-	while (acceptSymbol('+', list) || acceptSymbol('-', list)) {
-		// If we encounter a + or -, 
-		// it must be followed by another term
-
-
-
-
-        
-		if (!acceptTerm(list)) {
+	// expression 1
+	while (acceptSymbol("=", list)) {
+		if (acceptTerm(list) == 0) {
 			return 0;
 		}
 	}
+	// expression 2
+	while (acceptSymbol("\n", list)) {
+		if (acceptTerm(list) == 0) {
+			return 0;
+		}
+	}
+	
 	return 1;
 }
-// end of recognizeExp.c
 
-// do equation test
+int isValidEquation(List *list) {
+	return acceptExpression(&list);
+}
+	
 
+int isSingleVariableEquation(List *list);
+	// Return 1 if and only if the TokenList list 
+	// represents a valid equation that includes exactly
+	// one variable.
+
+int getDegree(List *list);
+	// Return the degree of the single variable equation list.
