@@ -59,26 +59,25 @@ int acceptTerm(List **list) { // needs change according to excercise
 			return acceptNumber(list);
 		}
 
-	} else if (acceptSymbol('=', list)){
+	} else if (acceptSymbol('=', list) || acceptSymbol('+', list)|| acceptSymbol('-', list)){
 		return 0;
 	}
 
-	//printf("!\n");
+	
 	return 1;
 }
 
 int acceptExpression(List **list) { // needs change according to excercise
+	(acceptSymbol('-', list));
+			
 	if (!acceptTerm(list)) {
-		if (acceptSymbol('-', list)) {
-			goto label_1;
-		}
+
 		return 0;
 	} 
 
 	//printf("First term checked!\n");
 	
 	while (acceptSymbol('+', list) || acceptSymbol('-', list)){
-		label_1:
 		if (!acceptTerm(list)){
 			return 0; 
 		}
@@ -92,18 +91,11 @@ int acceptExpression(List **list) { // needs change according to excercise
 int isValidEquation(List *list) {
 	//printf("Starting first expression check\n");
 	if (acceptExpression(&list)) {
-<<<<<<< HEAD
-		//printf("First expression done!\n");
-		if (acceptSymbol('=', &list)) {
-			//printf("Starting second expression check!\n");
-			return acceptExpression(&list);
-=======
-		printf("Esimene expression done!\n");
+		//printf("Esimene expression done!\n");
 		if (acceptSymbol('=', &list)) {
 			//printf("Jõudsin peale esimest võrdus märki!\n");
 			//check if = again
 			return acceptExpression(&list) && !acceptSymbol('=', &list);
->>>>>>> b6da91a96b9b9250c24beff660ec89946e73b88a
 		}
 	}
 	return 0;
@@ -115,10 +107,12 @@ int isSingleVariableEquation(List *list) {
 	char *arr1 = NULL;
 		char *arr2 = NULL;
 		int counter = 0;
+		int identifierFound = 0;
 
 	while(list->next != NULL) {
 		
 		if (list->type == IDENTIFIER) {
+			identifierFound = 1;
 			arr1 = (list->token).identifier;
 
 			if (counter > 0 && strcmp(arr1, arr2) != 0) {
@@ -130,6 +124,9 @@ int isSingleVariableEquation(List *list) {
 			counter++;
 		}
 		list = list->next;
+	}
+	if (identifierFound == 0) {
+		return 0;
 	}
 
 	return 1;
@@ -146,7 +143,7 @@ int getDegree(List *list) {
 	while(list->next != NULL) {
 	
 		if ((list->token).symbol == '^') {
-			if((list->token).number > maxDegree) {
+			if((list->next)->type == NUMBER && ((list->next)->token).number > maxDegree) {
 				maxDegree = ((list->next)->token).number;
 			}
 		}
