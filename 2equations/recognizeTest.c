@@ -21,12 +21,11 @@ void recognizeEquations() {
 		list = tokenList(input);
 		printList(list);
 		if (isValidEquation(list)) {
-			/*if (isSingleVariableEquation(list)) {
+			if (isSingleVariableEquation(list)) {
 				printf("this is an equation in 1 variable of degree %i\n", getDegree(list));
 			} else {
 				printf("this is an equation, but not in 1 variable\n");
-			} */
-			printf("This is an equation\n");
+			}
 		} else {
 			printf("this is not an equation\n");
 		}

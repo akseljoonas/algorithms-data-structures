@@ -15,6 +15,8 @@
 #include "recognizeEq.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <math.h>
 
 
 // start of recognizeExp.c
@@ -63,11 +65,10 @@ int acceptExpression(List **list) { // needs change according to excercise
 		if (acceptSymbol('-', list)) {
 			goto label_1;
 		}
-		//printf("returnin 0\n");
 		return 0;
 	} 
 
-	//printf("esimene term sisse võetud\n");
+	//printf("First term checked!\n");
 	
 	while (acceptSymbol('+', list) || acceptSymbol('-', list)){
 		label_1:
@@ -80,11 +81,11 @@ int acceptExpression(List **list) { // needs change according to excercise
 }
 
 int isValidEquation(List *list) {
-	//printf("alustan esimese expressioniga\n");
+	//printf("Starting first expression check\n");
 	if (acceptExpression(&list)) {
-		//printf("Esimene expression done!\n");
+		//printf("First expression done!\n");
 		if (acceptSymbol('=', &list)) {
-			//printf("Jõudsin peale võrdus märki!\n");
+			//printf("Starting second expression check!\n");
 			return acceptExpression(&list);
 		}
 	}
@@ -92,10 +93,51 @@ int isValidEquation(List *list) {
 }
 	
 
-int isSingleVariableEquation(List *list);
-	// Return 1 if and only if the TokenList list 
-	// represents a valid equation that includes exactly
-	// one variable.
+int isSingleVariableEquation(List *list) {
 
-int getDegree(List *list);
+	char *arr1 = NULL;
+		char *arr2 = NULL;
+		int counter = 0;
+
+	while(list->next != NULL) {
+		
+		if (list->type == IDENTIFIER) {
+			arr1 = (list->token).identifier;
+
+			if (counter > 0 && strcmp(arr1, arr2) != 0) {
+				
+				return 0;
+			}
+
+			arr2 = arr1;
+			counter++;
+		}
+		list = list->next;
+	}
+
+	return 1;
+	
+	
+	
+	
+}
+	
+
+int getDegree(List *list) {
+	
+	int maxDegree = 1;
+	while(list->next != NULL) {
+	
+		if ((list->token).symbol == '^') {
+			if((list->token).number > maxDegree) {
+				maxDegree = ((list->next)->token).number;
+			}
+		}
+		list = list->next;
+	}
+	return maxDegree;
+	
+	//return 1;
+	
+}
 	// Return the degree of the single variable equation list.
