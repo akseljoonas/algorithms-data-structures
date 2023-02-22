@@ -61,6 +61,8 @@ int acceptTerm(List **list) { // needs change according to excercise
 
 	} else if (acceptSymbol('=', list) || acceptSymbol('+', list)|| acceptSymbol('-', list)){
 		return 0;
+	} else if ((*list) == NULL){
+		return 0;
 	}
 
 	
@@ -71,7 +73,7 @@ int acceptExpression(List **list) { // needs change according to excercise
 	(acceptSymbol('-', list));
 			
 	if (!acceptTerm(list)) {
-
+		//printf("failed to accept term!\n");
 		return 0;
 	} 
 
