@@ -1,5 +1,5 @@
 /* file   : recognizeEq.c */
-/* author : ??? */
+/* author : Aksel Joonas Reedi (s4790820) Mihkel Mariuz Jezierski (S4787730) */
 
 /* Description:
  * Implementation of recognition of simple 
@@ -44,36 +44,27 @@ int acceptNumber(List **list) {
 	return 0;
 }
 
-<<<<<<< HEAD
-int acceptTerm(List **list) { // needs change according to excercise
-	if (acceptNumber(list)) { // putsis gray area
-		
-		if(acceptSymbol('^', list)) {
-			return 0;
-		}
-=======
 int acceptTerm(List **list) { 
-	if (acceptNumber(list)) { 
->>>>>>> 4116bf7b697d4136586bbe2242fb412d840de38d
-		if (acceptIdentifier(list)) {
+	if (acceptNumber(list)) {  // checks if the current input is a number
+		if (acceptIdentifier(list)) { // after finding an number check if there is an identifier
 			
-			if(acceptSymbol('^', list)) {
+			if(acceptSymbol('^', list)) { // check for degree and if found check if its a number
 				return acceptNumber(list);
 			}
 		}
-	} else if (acceptIdentifier(list)) {
+	} else if (acceptIdentifier(list)) { // if not a number checks if the current input is a identifier
 			
 			
-		if(acceptSymbol('^', list)) {
+		if(acceptSymbol('^', list)) { // check for degree and if found check if its a number
 			
 			return acceptNumber(list);
 		}
 
 		
 		
-	} else if (acceptSymbol('=', list) || acceptSymbol('+', list)|| acceptSymbol('-', list)){
+	} else if (acceptSymbol('=', list) || acceptSymbol('+', list)|| acceptSymbol('-', list)){ // checks for double signs ex. x = = 4
 		return 0;
-	} else if ((*list) == NULL){
+	} else if ((*list) == NULL){ // if there is not anything after = sign
 		return 0;
 	}
 
@@ -82,16 +73,16 @@ int acceptTerm(List **list) {
 }
 
 int acceptExpression(List **list) { 
-	(acceptSymbol('-', list));
+	(acceptSymbol('-', list)); // if expression starts with '-' go forward
 			
-	if (!acceptTerm(list)) {
-		//printf("failed to accept term!\n");
+	if (!acceptTerm(list)) { // if you cant find a term after starting to find an experssion, quit
+		
 		return 0;
 	} 
 
-	//printf("First term checked!\n");
+
 	
-	while (acceptSymbol('+', list) || acceptSymbol('-', list)){
+	while (acceptSymbol('+', list) || acceptSymbol('-', list)){ // if an experssion has multiple terms loop forward
 		if (!acceptTerm(list)){
 			return 0; 
 		}
@@ -103,20 +94,19 @@ int acceptExpression(List **list) {
 }
 
 int isValidEquation(List *list) {
-	//printf("Starting first expression check\n");
-	if (acceptExpression(&list)) {
-		//printf("Esimene expression done!\n");
-		if (acceptSymbol('=', &list)) {
-			//printf("Jõudsin peale esimest võrdus märki!\n");
-			//check if = again
-			return acceptExpression(&list) && list == NULL;
+
+	if (acceptExpression(&list)) { // try to find the first expression
+
+		if (acceptSymbol('=', &list)) { // after finding the first expression try to find = 
+
+			return acceptExpression(&list) && list == NULL; // after finding = try to find second expression and if there is something more return 0
 		}
 	}
-	return 0;
+	return 0; // if cant find expressions
 }
 	
 
-int isSingleVariableEquation(List *list) {
+int isSingleVariableEquation(List *list) { // checks if the equation has two or more variables
 
 	char *arr1 = NULL;
 		char *arr2 = NULL;
@@ -124,14 +114,13 @@ int isSingleVariableEquation(List *list) {
 		int identifierFound = 0;
 
 	while(list != NULL) {
-		//printf("I have been here!");
-		//printf("%d\n", list->type);
+
 		if (list->type == IDENTIFIER) {
 			identifierFound = 1;
 			arr1 = (list->token).identifier;
 
 			if (counter > 0 && strcmp(arr1, arr2) != 0) {
-				//printf("multiple fould\n");
+
 				return 0;
 			}
 
@@ -141,7 +130,7 @@ int isSingleVariableEquation(List *list) {
 		list = list->next;
 	}
 	if (identifierFound == 0) {
-		//printf("Identifiers not found\n");
+
 		return 0;
 	}
 
@@ -167,7 +156,7 @@ int getDegree(List *list) {
 	}
 	return maxDegree;
 	
-	//return 1;
+
 	
 }
 	// Return the degree of the single variable equation list.
