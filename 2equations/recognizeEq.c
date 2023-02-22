@@ -111,14 +111,15 @@ int isSingleVariableEquation(List *list) {
 		int counter = 0;
 		int identifierFound = 0;
 
-	while(list->next != NULL) {
-		
+	while(list != NULL) {
+		printf("I have been here!");
+		printf("%d\n", list->type);
 		if (list->type == IDENTIFIER) {
 			identifierFound = 1;
 			arr1 = (list->token).identifier;
 
 			if (counter > 0 && strcmp(arr1, arr2) != 0) {
-				
+				printf("multiple fould\n");
 				return 0;
 			}
 
@@ -128,6 +129,7 @@ int isSingleVariableEquation(List *list) {
 		list = list->next;
 	}
 	if (identifierFound == 0) {
+		printf("Identifiers not found\n");
 		return 0;
 	}
 
