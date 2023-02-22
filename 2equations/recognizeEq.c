@@ -46,6 +46,10 @@ int acceptNumber(List **list) {
 
 int acceptTerm(List **list) { // needs change according to excercise
 	if (acceptNumber(list)) { // putsis gray area
+		
+		if(acceptSymbol('^', list)) {
+			return 0;
+		}
 		if (acceptIdentifier(list)) {
 			
 			if(acceptSymbol('^', list)) {
@@ -56,9 +60,12 @@ int acceptTerm(List **list) { // needs change according to excercise
 			
 			
 		if(acceptSymbol('^', list)) {
+			
 			return acceptNumber(list);
 		}
 
+		
+		
 	} else if (acceptSymbol('=', list) || acceptSymbol('+', list)|| acceptSymbol('-', list)){
 		return 0;
 	} else if ((*list) == NULL){
@@ -97,7 +104,7 @@ int isValidEquation(List *list) {
 		if (acceptSymbol('=', &list)) {
 			//printf("Jõudsin peale esimest võrdus märki!\n");
 			//check if = again
-			return acceptExpression(&list) && !acceptSymbol('=', &list);
+			return acceptExpression(&list) && list == NULL;
 		}
 	}
 	return 0;
@@ -112,14 +119,14 @@ int isSingleVariableEquation(List *list) {
 		int identifierFound = 0;
 
 	while(list != NULL) {
-		printf("I have been here!");
-		printf("%d\n", list->type);
+		//printf("I have been here!");
+		//printf("%d\n", list->type);
 		if (list->type == IDENTIFIER) {
 			identifierFound = 1;
 			arr1 = (list->token).identifier;
 
 			if (counter > 0 && strcmp(arr1, arr2) != 0) {
-				printf("multiple fould\n");
+				//printf("multiple fould\n");
 				return 0;
 			}
 
@@ -129,7 +136,7 @@ int isSingleVariableEquation(List *list) {
 		list = list->next;
 	}
 	if (identifierFound == 0) {
-		printf("Identifiers not found\n");
+		//printf("Identifiers not found\n");
 		return 0;
 	}
 
