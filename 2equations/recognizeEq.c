@@ -44,12 +44,17 @@ int acceptNumber(List **list) {
 	return 0;
 }
 
+<<<<<<< HEAD
 int acceptTerm(List **list) { // needs change according to excercise
 	if (acceptNumber(list)) { // putsis gray area
 		
 		if(acceptSymbol('^', list)) {
 			return 0;
 		}
+=======
+int acceptTerm(List **list) { 
+	if (acceptNumber(list)) { 
+>>>>>>> 4116bf7b697d4136586bbe2242fb412d840de38d
 		if (acceptIdentifier(list)) {
 			
 			if(acceptSymbol('^', list)) {
@@ -76,7 +81,7 @@ int acceptTerm(List **list) { // needs change according to excercise
 	return 1;
 }
 
-int acceptExpression(List **list) { // needs change according to excercise
+int acceptExpression(List **list) { 
 	(acceptSymbol('-', list));
 			
 	if (!acceptTerm(list)) {
