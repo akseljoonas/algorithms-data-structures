@@ -141,3 +141,91 @@ int getDegree(List *list) {
 
 	return maxDegreeFound;
 }
+<<<<<<< HEAD
+=======
+	// Return the degree of the single variable equation list.
+
+
+void calculateEq(List *list){
+
+
+	int identifier = 0, number = 0;
+
+	while( !acceptSymbol('=', &list)){
+		printf("in first while \n");
+
+		if (acceptSymbol('-', &list)){
+			printf("found - \n");
+			if (list->type == NUMBER){ 
+				if((list->next)->type == IDENTIFIER){ //if 5x=0
+					identifier -= (list->token).number;
+					list = (list)->next; // to move forward to count for the identifier
+				} else{ // if 5 = x
+					number -= (list->token).number;
+				}
+			} else if (list->type == IDENTIFIER && list->type != NUMBER ){ // if x=0
+				identifier--;
+			}
+		} else{
+
+			if (list->type == NUMBER){ 
+				if((list->next)->type == IDENTIFIER){ //if 5x=0
+					identifier += (list->token).number;
+					list = (list)->next; // to move forward to count for the identifier
+
+				} else{ // if 5 = x
+					number += (list->token).number;
+
+				}
+
+			} else if (list->type == IDENTIFIER && list->type != NUMBER ){ // if x=0
+				identifier++;
+			}
+		}
+		
+		
+
+		list = (list)->next;
+
+	}
+	while (list != NULL){
+		printf("in second while \n");
+		if (acceptSymbol('-', &list)){
+			printf("found - \n");
+			if (list->type == NUMBER){ 
+				if((list->next)->type == IDENTIFIER){ //if 5x=0
+					identifier += (list->token).number;
+					list = (list)->next; // to move forward to count for the identifier
+				} else{ // if 5 = x
+					number += (list->token).number;
+				}
+			} else if (list->type == IDENTIFIER && list->type != NUMBER ){ // if x=0
+				identifier++;
+			}
+		} else{
+
+			if (list->type == NUMBER){ 
+				if((list->next)->type == IDENTIFIER){ //if 5x=0
+					identifier -= (list->token).number;
+					list = (list)->next; // to move forward to count for the identifier
+
+				} else{ // if 5 = x
+					number -= (list->token).number;
+
+				}
+
+			} else if (list->type == IDENTIFIER && list->type != NUMBER ){ // if x=0
+				identifier--;
+			}
+		}
+		if (list->next != NULL){
+			list = (list)->next;
+
+		} else{
+			break;
+		}
+	
+	}
+	printf("number: %i ident: %i", number, identifier);
+}
+>>>>>>> a352cc971c16f7a7641b1449891e545ee0ca64bb
