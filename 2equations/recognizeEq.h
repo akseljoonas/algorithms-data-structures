@@ -27,4 +27,7 @@ int isSingleVariableEquation(List *list);
 int getDegree(List *list);
 	// Return the degree of the single variable equation list.
 
+
+void calculateEq(List *list);
+	// calculates the solution to the equation if its valid equation
 #endif
