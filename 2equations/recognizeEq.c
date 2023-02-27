@@ -234,11 +234,10 @@ void calculateEq(List *list){
 				identifier--;
 			}
 		}
+		
 		if (list->next != NULL){
 			list = (list)->next;
 
-		} else{
-			break;
 		}
 	
 	}
