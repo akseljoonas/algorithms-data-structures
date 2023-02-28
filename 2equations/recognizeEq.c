@@ -161,9 +161,9 @@ void calculateEq(List *list){
 			
 			if (list->type == NUMBER){ 
 				if((list->next)->type == IDENTIFIER){ //if 5x=0
-					if ((list->next)->token.symbol == '^') {
+					if ((list->next)->token.symbol == '^') { 
 						if (((list->next)->next)->token.number == 0) {
-							number += (list->token).number;
+							number += (list->token).number; // ????????????
 
 						} else if (((list->next)->next)->token.number == 1) {
 							identifier -= (list->token).number;
@@ -181,15 +181,43 @@ void calculateEq(List *list){
 		} else {
 
 			if (list->type == NUMBER){ 
+				
+				// if((list->next)->type == IDENTIFIER){ //if 5x=0
+				// 	identifier += (list->token).number;
+				// 	list = (list)->next; // to move forward to count for the identifier
+
+				// } else{ // if 5 = x
+				// 	number -= (list->token).number;
+
+				// }
+
 				if((list->next)->type == IDENTIFIER){ //if 5x=0
-					identifier += (list->token).number;
-					list = (list)->next; // to move forward to count for the identifier
+					if (((list->next)->next)->type == SYMBOL &&((list->next)->next)->token.symbol == '^') { 
+						printf("found pwr symbol \n");
+						list = (list)->next; // move to account for identifier
+						list = (list)->next; // move to account for power symbol
+						if ((((list->next)->next)->next)->token.number == 0) {
+							printf("in power 0 \n");
+							number += (list->token).number; 
+							list = (list)->next; // move to account for identifier
+							list = (list)->next; // move to account for power symbol
+							list = (list)->next; // move to account for power number
 
+						} else if ((((list->next)->next)->next)->token.number == 1) {
+							printf("in power 1 \n");
+							identifier += (list->token).number;
+							list = (list)->next; // move to account for identifier
+							list = (list)->next; // move to account for power symbol
+							list = (list)->next; // move to account for power number
+						}
+					} else {
+						printf("didnt find powr \n");
+						identifier += (list->token).number;
+						list = (list)->next; // to move forward to count for the identifier
+					}
 				} else{ // if 5 = x
-					number -= (list->token).number;
-
+					number += (list->token).number;
 				}
-
 			} else if (list->type == IDENTIFIER){ // if x=0
 				identifier++;
 			}
@@ -201,6 +229,7 @@ void calculateEq(List *list){
 
 	}
 
+		printf("vahehhahhahaha id: %i num: %i \n",identifier,number);
 	
 	while (list != NULL){
 		if (acceptSymbol('^', &list)){
@@ -249,6 +278,6 @@ void calculateEq(List *list){
 	if (identifier == 0) {
 		printf("not solvable\n");
 	} else {
-		printf("solution: %.3lf\n", answer);
+		printf("id: %i num: %i solution: %.3lf\n",identifier,number, answer);
 	}
 }
