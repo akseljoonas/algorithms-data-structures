@@ -47,27 +47,19 @@ int acceptNumber(List **list) {
 int acceptTerm(List **list) { 
 	if (acceptNumber(list)) {  // checks if the current input is a number
 		if (acceptIdentifier(list)) { // after finding an number check if there is an identifier
-			
 			if(acceptSymbol('^', list)) { // check for degree and if found check if its a number
 				return acceptNumber(list);
 			}
 		}
 	} else if (acceptIdentifier(list)) { // if not a number checks if the current input is a identifier
-			
-			
 		if(acceptSymbol('^', list)) { // check for degree and if found check if its a number
-			
 			return acceptNumber(list);
-		}
-
-		
-		
+		}	
 	} else if (acceptSymbol('=', list) || acceptSymbol('+', list)|| acceptSymbol('-', list)){ // checks for double signs ex. x = = 4
 		return 0;
 	} else if ((*list) == NULL){ // if there is not anything after = sign
 		return 0;
 	}
-
 	
 	return 1;
 }
@@ -76,51 +68,46 @@ int acceptExpression(List **list) {
 	(acceptSymbol('-', list)); // if expression starts with '-' go forward
 			
 	if (!acceptTerm(list)) { // if you cant find a term after starting to find an experssion, quit
-		
 		return 0;
 	} 
-
-
 	
 	while (acceptSymbol('+', list) || acceptSymbol('-', list)){ // if an experssion has multiple terms loop forward
 		if (!acceptTerm(list)){
 			return 0; 
 		}
 	}
-	
-	
 
 	return 1;
 }
 
 int isValidEquation(List *list) {
-
 	if (acceptExpression(&list)) { // try to find the first expression
-
 		if (acceptSymbol('=', &list)) { // after finding the first expression try to find = 
-
 			return acceptExpression(&list) && list == NULL; // after finding = try to find second expression and if there is something more return 0
 		}
 	}
+
 	return 0; // if cant find expressions
 }
 	
 
 int isSingleVariableEquation(List *list) { // checks if the equation has two or more variables
-
+	// two character arrays are made to compare potentially >1 found identifiers,
+	// counter to track the amount of identifiers (whether it is more than 1), and a variable to check if any identifiers are found at all.
 	char *arr1 = NULL;
-		char *arr2 = NULL;
-		int counter = 0;
-		int identifierFound = 0;
+	char *arr2 = NULL;
+	int counter = 0;
+	int identifierFound = 0;
 
-	while(list != NULL) {
+	while(list != NULL) { // this while loop checks every node of the list
 
+		// if an identifier is found, it is saved into the array
 		if (list->type == IDENTIFIER) {
 			identifierFound = 1;
 			arr1 = (list->token).identifier;
 
+			// if there are more than two identifiers and they are not the same, return 0 (not a single variable eq)
 			if (counter > 0 && strcmp(arr1, arr2) != 0) {
-
 				return 0;
 			}
 
@@ -129,35 +116,30 @@ int isSingleVariableEquation(List *list) { // checks if the equation has two or 
 		}
 		list = list->next;
 	}
+	// if none identifiers found, return 0
 	if (identifierFound == 0) {
-
 		return 0;
 	}
 
 	return 1;
-	
-	
-	
-	
 }
 	
 
 int getDegree(List *list) {
 	
-	int maxDegree = 1;
+	// initialised to 1 since this function is ran only on equations with found identifiers (which is at least degree 1)
+	int maxDegreeFound = 1;
 	while(list->next != NULL) {
-	
+		// this if statement checks every degree indicated after '^'. If it is larger than previous maxDegreeFound, then it is saved
 		if ((list->token).symbol == '^') {
-			if((list->next)->type == NUMBER && ((list->next)->token).number > maxDegree) {
-				maxDegree = ((list->next)->token).number;
+			if((list->next)->type == NUMBER && ((list->next)->token).number > maxDegreeFound) {
+				maxDegreeFound = ((list->next)->token).number;
 			}
 		}
 		list = list->next;
 	}
-	return maxDegree;
-	
 
-	
+	return maxDegreeFound;
 }
 	// Return the degree of the single variable equation list.
 
@@ -179,7 +161,7 @@ void calculateEq(List *list){
 				} else{ // if 5 = x
 					number -= (list->token).number;
 				}
-			} else if (list->type == IDENTIFIER && list->type != NUMBER ){ // if x=0
+			} else if (list->type == IDENTIFIER){ // if x=0
 				identifier--;
 			}
 		} else{
@@ -194,7 +176,7 @@ void calculateEq(List *list){
 
 				}
 
-			} else if (list->type == IDENTIFIER && list->type != NUMBER ){ // if x=0
+			} else if (list->type == IDENTIFIER){ // if x=0
 				identifier++;
 			}
 		}
@@ -204,6 +186,8 @@ void calculateEq(List *list){
 		list = (list)->next;
 
 	}
+
+	
 	while (list != NULL){
 		printf("in second while \n");
 		if (acceptSymbol('-', &list)){
@@ -215,7 +199,7 @@ void calculateEq(List *list){
 				} else{ // if 5 = x
 					number += (list->token).number;
 				}
-			} else if (list->type == IDENTIFIER && list->type != NUMBER ){ // if x=0
+			} else if (list->type == IDENTIFIER){ // if x=0
 				identifier++;
 			}
 		} else{
@@ -230,15 +214,15 @@ void calculateEq(List *list){
 
 				}
 
-			} else if (list->type == IDENTIFIER && list->type != NUMBER ){ // if x=0
+			} else if (list->type == IDENTIFIER ){ // if x=0
 				identifier--;
 			}
 		}
 		
-		if (list->next != NULL){
-			list = (list)->next;
+		
+		list = (list)->next;
 
-		}
+	
 	
 	}
 	printf("number: %i ident: %i", number, identifier);
