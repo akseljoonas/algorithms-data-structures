@@ -23,7 +23,9 @@ void recognizeEquations() {
 		if (isValidEquation(list)) {
 			if (isSingleVariableEquation(list)) {
 				printf("this is an equation in 1 variable of degree %i\n", getDegree(list));
-				calculateEq(list);
+				if (getDegree(list) == 1) {
+					calculateEq(list);
+				}
 			} else {
 				printf("this is an equation, but not in 1 variable\n");
 			}

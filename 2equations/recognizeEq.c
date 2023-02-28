@@ -150,21 +150,35 @@ void calculateEq(List *list){
 	int identifier = 0, number = 0;
 
 	while( !acceptSymbol('=', &list)){
-		printf("in first while \n");
+		if (acceptSymbol('^', &list)){
+			list = (list)->next;
+			if (list->token.symbol == '=') {
+				break;
+			} 
+		}
 
 		if (acceptSymbol('-', &list)){
-			printf("found - \n");
+			
 			if (list->type == NUMBER){ 
 				if((list->next)->type == IDENTIFIER){ //if 5x=0
-					identifier -= (list->token).number;
-					list = (list)->next; // to move forward to count for the identifier
+					if ((list->next)->token.symbol == '^') {
+						if (((list->next)->next)->token.number == 0) {
+							number += (list->token).number;
+
+						} else if (((list->next)->next)->token.number == 1) {
+							identifier -= (list->token).number;
+						}
+					} else {
+						identifier -= (list->token).number;
+						list = (list)->next; // to move forward to count for the identifier
+					}
 				} else{ // if 5 = x
-					number -= (list->token).number;
+					number += (list->token).number;
 				}
-			} else if (list->type == IDENTIFIER){ // if x=0
+			} else if (list->type == IDENTIFIER) { // if x=0
 				identifier--;
 			}
-		} else{
+		} else {
 
 			if (list->type == NUMBER){ 
 				if((list->next)->type == IDENTIFIER){ //if 5x=0
@@ -172,7 +186,7 @@ void calculateEq(List *list){
 					list = (list)->next; // to move forward to count for the identifier
 
 				} else{ // if 5 = x
-					number += (list->token).number;
+					number -= (list->token).number;
 
 				}
 
@@ -189,41 +203,52 @@ void calculateEq(List *list){
 
 	
 	while (list != NULL){
-		printf("in second while \n");
+		if (acceptSymbol('^', &list)){
+				if (list->next != NULL) {
+					list = (list)->next;
+				} else {
+					break;
+				}
+		}
+
 		if (acceptSymbol('-', &list)){
-			printf("found - \n");
 			if (list->type == NUMBER){ 
-				if((list->next)->type == IDENTIFIER){ //if 5x=0
+				if(list->next != NULL && (list->next)->type == IDENTIFIER){ //if 5x=0
 					identifier += (list->token).number;
 					list = (list)->next; // to move forward to count for the identifier
 				} else{ // if 5 = x
-					number += (list->token).number;
+					number -= (list->token).number;
 				}
 			} else if (list->type == IDENTIFIER){ // if x=0
 				identifier++;
 			}
-		} else{
+		} else {
 
 			if (list->type == NUMBER){ 
-				if((list->next)->type == IDENTIFIER){ //if 5x=0
+				if(list->next != NULL && (list->next)->type == IDENTIFIER){ //if 5x=0
 					identifier -= (list->token).number;
 					list = (list)->next; // to move forward to count for the identifier
 
 				} else{ // if 5 = x
-					number -= (list->token).number;
+					number += (list->token).number;
 
 				}
 
-			} else if (list->type == IDENTIFIER ){ // if x=0
+			} else if (list->type == IDENTIFIER){ // if x=0
 				identifier--;
 			}
 		}
 		
-		
-		list = (list)->next;
-
-	
+			list = (list)->next;
 	
 	}
-	printf("number: %i ident: %i", number, identifier);
+	float answer = (float)number/(float)identifier;
+	if (answer < 0 && answer > -0.0005) {
+		answer = 0;
+	}
+	if (identifier == 0) {
+		printf("not solvable\n");
+	} else {
+		printf("solution: %.3lf\n", answer);
+	}
 }
