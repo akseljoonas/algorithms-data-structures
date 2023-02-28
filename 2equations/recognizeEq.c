@@ -194,8 +194,6 @@ void calculateEq(List *list){
 				if((list->next)->type == IDENTIFIER){ //if 5x=0
 					if (((list->next)->next)->type == SYMBOL &&((list->next)->next)->token.symbol == '^') { 
 						printf("found pwr symbol \n");
-						list = (list)->next; // move to account for identifier
-						list = (list)->next; // move to account for power symbol
 						if ((((list->next)->next)->next)->token.number == 0) {
 							printf("in power 0 \n");
 							number += (list->token).number; 
