@@ -3,7 +3,7 @@
 
 /* Description:
  * Implementation of recognition of simple 
- * calculation expressions.
+ * calculation expressions and solving them. 
  *
  * Note that this implementation explicitly depends 
  * on the implementation of the scanner, and therefore
@@ -141,9 +141,8 @@ int getDegree(List *list) {
 
 	return maxDegreeFound;
 }
-	// Return the degree of the single variable equation list.
 
-
+// calculating linear equations
 void calculateEq(List *list){
 
 
@@ -261,37 +260,39 @@ void calculateEq(List *list){
 
 	}
 	
-	while (list != NULL){
+	
+	while (list != NULL){ //check second expression after =
 
-		if (acceptSymbol('-', &list)){
-			if (list->type == NUMBER){ 
-				if(list->next != NULL && (list->next)->type == IDENTIFIER){ //if 5x=0
-					if ((list->next)->next != NULL && ((list->next)->next)->type == SYMBOL &&((list->next)->next)->token.symbol == '^') { 
+		
+		if (acceptSymbol('-', &list)){ //account for negative expressions
+			if (list->type == NUMBER){  
+				if(list->next != NULL && (list->next)->type == IDENTIFIER){ // check for identifier after the number
+					if ((list->next)->next != NULL && ((list->next)->next)->type == SYMBOL &&((list->next)->next)->token.symbol == '^') { // check if there is a power
 						
-						if (((list->next)->next)->next != NULL && (((list->next)->next)->next)->token.number == 0) {
+						if (((list->next)->next)->next != NULL && (((list->next)->next)->next)->token.number == 0) { // if the power is 0, add to the constant number
 							
 							number -= (list->token).number; 
 							list = (list)->next; // move to account for identifier
 							list = (list)->next; // move to account for power symbol
 							list = (list)->next; // move to account for power number
 
-						} else if ((((list->next)->next)->next)->token.number == 1) {
+						} else if ((((list->next)->next)->next)->token.number == 1) { //if power is 1, add one to the identifier counter
 							
 							identifier += (list->token).number;
 							list = (list)->next; // move to account for identifier
 							list = (list)->next; // move to account for power symbol
 							list = (list)->next; // move to account for power number
 						}
-					} else {
+					} else { // if there is no power, simply add the number to identifier counter
 						
 						identifier += (list->token).number;
 						list = (list)->next; // to move forward to count for the identifier
 					}
-				} else{ // if 5 = x
+				} else{ // if there is simply a number without an identifier
 					number -= (list->token).number;
 				}
-			} else if (list->type == IDENTIFIER){ // if x=0
-				if (list->next != NULL && (list->next)->type == SYMBOL && (list->next)->token.symbol == '^') { 
+			} else if (list->type == IDENTIFIER){ // if there is an identifier without a constant number before it
+				if (list->next != NULL && (list->next)->type == SYMBOL && (list->next)->token.symbol == '^') { // everything else follows the same logic as above.
 						
 						if (((list->next)->next)->token.number == 0) {
 							
@@ -313,7 +314,7 @@ void calculateEq(List *list){
 						 // to move forward to count for the identifier
 					}
 			}
-		} else {
+		} else { // if the term is positive (+), everything else is the same
 
 			if (list->type == NUMBER){ 
 				if(list->next != NULL && (list->next)->type == IDENTIFIER){ //if 5x=0
@@ -333,42 +334,38 @@ void calculateEq(List *list){
 							list = (list)->next; // move to account for power symbol
 							list = (list)->next; // move to account for power number
 						}
-					} else {
-						
+					} else {	
 						identifier -= (list->token).number;
 						list = (list)->next; // to move forward to count for the identifier
 					}
-				} else{ // if 5 = x
+				} else{
 					number += (list->token).number;
 				}
-			} else if (list->type == IDENTIFIER){ // if x=0
+			} else if (list->type == IDENTIFIER){
 				if (list->next != NULL && (list->next)->type == SYMBOL && (list->next)->token.symbol == '^') { 
 
-						if (((list->next)->next)->token.number == 0) {
+					if (((list->next)->next)->token.number == 0) {
 
-							number++; 
-							list = (list)->next; // move to account for identifier
-							list = (list)->next; // move to account for power symbol
+						number++; 
+						list = (list)->next; // move to account for identifier
+						list = (list)->next; // move to account for power symbol
 							
-
-						} else if (((list->next)->next)->token.number == 1) {
-
-							identifier--;
-							list = (list)->next; // move to account for identifier
-							list = (list)->next; // move to account for power symbol
-							
-						}
-					} else {
+					} else if (((list->next)->next)->token.number == 1) {
 
 						identifier--;
-						 // to move forward to count for the identifier
+						list = (list)->next; // move to account for identifier
+						list = (list)->next; // move to account for power symbol
+							
 					}
+				} else {
+					identifier--;
+				}
 			}
 		}
-		
 			list = (list)->next;
-	
 	}
+
+	// calculate the answer and print it
 	double answer = (double)number/(double)identifier;
 	if (answer < 0 && answer > -0.0005) {
 		answer = 0;
@@ -376,7 +373,6 @@ void calculateEq(List *list){
 	if (identifier == 0) {
 		printf("not solvable\n");
 	} else {
-		//printf("id: %i num: %i solution: %.3lf\n",identifier,number, answer);
 		printf("solution: %.3lf\n", answer);
 	}
 }
