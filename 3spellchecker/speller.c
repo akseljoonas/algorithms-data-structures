@@ -32,14 +32,29 @@ int main(int argc, char *argv[]) {
 
 	// step 2: read in text
 	int counter = 0; // number of unknown words
+	int index = 0;
+	int c = EOF;
 
 	// BUG: This loop is wrong. It will read "one,twwo" as one word "onetwwo".
-	while (scanf("%45s", word) != EOF) {
-		trimWord(word);
-		if (!check(word, dictionary)) {
-			counter++;
-			printf("%s\n",word);
+	while ((c = getchar()) && c != EOF) {
+		// logic how to combine the char into word
+		word[index] = c;
+		index++;
+		word[index] = '\0';
+		if (!isalpha(c) && isalpha(word[index-2])){ // if scanned char is not alphabetical the end of word has been reached
+			trimWord(word);
+			if (!check(word, dictionary)) {
+				counter++;
+				printf("%s\n",word);
+			}
+
+			while (index != 0){ // set word back to 0
+				word[index] = 0;
+				index--;
+			}
+			
 		}
+		
 	}
 	// TODO: Replace the above while loop with a correct solution.
 	// Hints:
