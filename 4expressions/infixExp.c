@@ -134,18 +134,18 @@ void prefExpTrees() {
 	printf("give an expression: ");
 	ar = readInput();
 	while (ar[0] != '!') {
-		list = tokenList(ar);
+		list = tokenList(ar); // ?? 
 		printList(list);
 		List *listPosition = list;
 		ExpTree *tree = NULL;
-		if (treePrefixExpression(&listPosition, &tree) && listPosition == NULL) {
+		if (treePrefixExpression(&listPosition, &tree) && listPosition == NULL) { // if can create tree
 			printf("the formula is ");
-			printExpTreeInfix(tree);
+			printExpTreeInfix(tree); // print tree in infix notation
 			printf("\n");
-			if (!isNumerical(tree)) {
+			if (!isNumerical(tree)) { // look though tree and check that does not have x y z 
 				printf("this is not a numerical prefix expression\n");
 			} else {
-				printf("the formula evaluates to %f\n", valueExpTree(tree));
+				printf("the formula evaluates to %f\n", valueExpTree(tree)); // actual calculations
 			}
 		} else {
 			printf("this is not a valid prefix expression\n");
@@ -153,7 +153,7 @@ void prefExpTrees() {
 		freeExpTree(tree);
 		free(ar);
 		freeTokenList(list);
-		printf("\ngive an expression: ");
+		printf("\ngive an expression: "); // for next expression
 		ar = readInput();
 	}
 	free(ar);
