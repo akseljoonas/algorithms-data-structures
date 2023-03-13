@@ -1,4 +1,9 @@
-// a SLOW spell checker
+// file        : speller.c
+// author      : Mihkel Mariusz Jezierski (s4787730) && Aksel Joonas Reedi (s4790820)
+// date        : Tue Mar 07 2023
+
+
+/* description of the program: This program checks whether words are present in a dictionary*/
 
 #include <ctype.h>
 #include <stdio.h>
@@ -19,15 +24,14 @@ void trimWord(char *word) {
 }
 
 
-
 int main(int argc, char *argv[]) {
 	char word[LENGTH + 1] = "";
 
-	// step 1: read in the dictionary
-	Dictionary *dictionary = newEmptyDictionary();
+	// step 1: read in the trie
+	Trie *trie = newTrieNode();
 	while (scanf("%45s", word) && word[0] != '!') {
 		trimWord(word);
-		addWord(word, dictionary);
+		addWord(word, trie);
 	}
 
 	// step 2: read in text
@@ -35,7 +39,7 @@ int main(int argc, char *argv[]) {
 	int index = 0;
 	int c = EOF;
 
-	// BUG: This loop is wrong. It will read "one,twwo" as one word "onetwwo".
+	// scanning in the words, letter by letter into word array
 	while ((c = getchar()) && c != EOF) {
 		// logic how to combine the char into word
 		word[index] = c;
@@ -43,7 +47,8 @@ int main(int argc, char *argv[]) {
 		word[index] = '\0';
 		if (!isalpha(c) && isalpha(word[index-2])){ // if scanned char is not alphabetical the end of word has been reached
 			trimWord(word);
-			if (!check(word, dictionary)) {
+			//printing words, that were not in the dictionary
+			if (!check(word, trie)) {
 				counter++;
 				printf("%s\n",word);
 			}
@@ -56,23 +61,9 @@ int main(int argc, char *argv[]) {
 		}
 		
 	}
-	// TODO: Replace the above while loop with a correct solution.
-	// Hints:
-	// - you should read one character at a time, using getchar()
-	// - alphabetical characters should be appended to the current word
-	// - any other symbol should terminate the word
-	// this code might be useful:
-	/*
-	int index = 0;
-	int c = EOF;
-	while ((c = getchar()) && c != EOF) {
-		// ...
-	}
-	*/
 
-	// step 3: print number of unknown words
+	// step 3: print number of unknown words and free the memory in the trie
 	printf("%d\n", counter);
-
-	freeDictionary(dictionary);
+	freeTrie(trie);
 	return 0;
 }
