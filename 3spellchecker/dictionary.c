@@ -7,15 +7,33 @@ addition to the dictionary, checks if certain words are in the dictionary and th
 
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+<<<<<<< HEAD
 #include "dictionary.h"
 
 // a trie node, which has a child node for each letter in alphabet
 struct trieNode {	
 	bool isEndNode;
 	Trie *children[26];
+=======
+#include <stdbool.h>
+
+#include "dictionary.h"
+
+// standard implementation for a trie
+struct trieNode {
+	bool endNode ;
+	Trie * children [26];
+};
+
+
+// A dictionary is an array
+struct dictonary {
+	int numWords;
+	int maxWords;
+	char **words;
+>>>>>>> 05ae4af2bb9fa69be9126e3ddf1a11a0dc5a3121
 };
 
 // creating a new trie node and setting all child nodes to NULL
