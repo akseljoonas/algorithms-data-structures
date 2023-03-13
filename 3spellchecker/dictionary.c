@@ -2,11 +2,18 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stdbool.h>
 
 #include "dictionary.h"
+
+// standard implementation for a trie
+struct trieNode {
+	bool endNode ;
+	Trie * children [26];
+};
+
 
 // A dictionary is an array
 struct dictonary {

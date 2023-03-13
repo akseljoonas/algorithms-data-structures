@@ -8,6 +8,9 @@
 // maximum length for a word
 #define LENGTH 45
 
+// standard implementation for a trie
+typedef struct trieNode Trie;
+
 // a dictionary is an array
 typedef struct dictonary Dictionary;
 

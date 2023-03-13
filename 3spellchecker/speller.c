@@ -2,6 +2,7 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "dictionary.h"
@@ -18,8 +19,6 @@ void trimWord(char *word) {
   word[k] = '\0';
 }
 
-
-
 int main(int argc, char *argv[]) {
 	char word[LENGTH + 1] = "";
 
@@ -35,19 +34,20 @@ int main(int argc, char *argv[]) {
 	int index = 0;
 	int c = EOF;
 
-	// BUG: This loop is wrong. It will read "one,twwo" as one word "onetwwo".
+
 	while ((c = getchar()) && c != EOF) {
 		// logic how to combine the char into word
 		word[index] = c;
 		index++;
 		word[index] = '\0';
+		// the if has to check if we reached a non alpha number and that we already scanned a word
 		if (!isalpha(c) && isalpha(word[index-2])){ // if scanned char is not alphabetical the end of word has been reached
 			trimWord(word);
 			if (!check(word, dictionary)) {
 				counter++;
 				printf("%s\n",word);
 			}
-
+			//index = 0;
 			while (index != 0){ // set word back to 0
 				word[index] = 0;
 				index--;
@@ -56,23 +56,9 @@ int main(int argc, char *argv[]) {
 		}
 		
 	}
-	// TODO: Replace the above while loop with a correct solution.
-	// Hints:
-	// - you should read one character at a time, using getchar()
-	// - alphabetical characters should be appended to the current word
-	// - any other symbol should terminate the word
-	// this code might be useful:
-	/*
-	int index = 0;
-	int c = EOF;
-	while ((c = getchar()) && c != EOF) {
-		// ...
-	}
-	*/
 
 	// step 3: print number of unknown words
 	printf("%d\n", counter);
-
 	freeDictionary(dictionary);
 	return 0;
 }
