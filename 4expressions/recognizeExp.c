@@ -37,6 +37,7 @@ int acceptNumber(List **list) {
 
 int acceptFactor(List **list) {
 	if (acceptNumber(list)) {
+		
 		return 1;
 	}
 	if (acceptIdentifier(list)) {
@@ -48,11 +49,11 @@ int acceptFactor(List **list) {
 	return 0;
 }
 
-int acceptTerm(List **list) {
-	if (!acceptFactor(list)) {
+int acceptTerm(List **list)  { // pass down a tree
+	if (!acceptFactor(list)) { // build a factor
 		return 0;
 	}
-	while (acceptSymbol('*', list) || acceptSymbol('/', list)) {
+	while (acceptSymbol('*', list) || acceptSymbol('/', list)) { 
 		// If we encounter a * or /, 
 		// it must be followed by another term
 		if (!acceptFactor(list)) {

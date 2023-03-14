@@ -1,4 +1,9 @@
-// a SLOW spell checker
+// file        : speller.c
+// author      : Mihkel Mariusz Jezierski (s4787730) && Aksel Joonas Reedi (s4790820)
+// date        : Tue Mar 07 2023
+
+
+/* description of the program: This program checks whether words are present in a dictionary*/
 
 #include <ctype.h>
 #include <stdio.h>
@@ -19,14 +24,18 @@ void trimWord(char *word) {
   word[k] = '\0';
 }
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 05ae4af2bb9fa69be9126e3ddf1a11a0dc5a3121
 int main(int argc, char *argv[]) {
 	char word[LENGTH + 1] = "";
 
-	// step 1: read in the dictionary
-	Dictionary *dictionary = newEmptyDictionary();
+	// step 1: read in the trie
+	Trie *trie = newTrieNode();
 	while (scanf("%45s", word) && word[0] != '!') {
 		trimWord(word);
-		addWord(word, dictionary);
+		addWord(word, trie);
 	}
 
 	// step 2: read in text
@@ -34,7 +43,11 @@ int main(int argc, char *argv[]) {
 	int index = 0;
 	int c = EOF;
 
+<<<<<<< HEAD
+	// scanning in the words, letter by letter into word array
+=======
 
+>>>>>>> 05ae4af2bb9fa69be9126e3ddf1a11a0dc5a3121
 	while ((c = getchar()) && c != EOF) {
 		// logic how to combine the char into word
 		word[index] = c;
@@ -43,7 +56,8 @@ int main(int argc, char *argv[]) {
 		// the if has to check if we reached a non alpha number and that we already scanned a word
 		if (!isalpha(c) && isalpha(word[index-2])){ // if scanned char is not alphabetical the end of word has been reached
 			trimWord(word);
-			if (!check(word, dictionary)) {
+			//printing words, that were not in the dictionary
+			if (!check(word, trie)) {
 				counter++;
 				printf("%s\n",word);
 			}
@@ -57,8 +71,12 @@ int main(int argc, char *argv[]) {
 		
 	}
 
-	// step 3: print number of unknown words
+	// step 3: print number of unknown words and free the memory in the trie
 	printf("%d\n", counter);
+<<<<<<< HEAD
+	freeTrie(trie);
+=======
 	freeDictionary(dictionary);
+>>>>>>> 05ae4af2bb9fa69be9126e3ddf1a11a0dc5a3121
 	return 0;
 }

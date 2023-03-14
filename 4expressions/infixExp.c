@@ -64,8 +64,9 @@ int treePrefixExpression(List **listNode, ExpTree **treeNode) {
 		*treeNode = newExpTreeNode(IDENTIFIER, token);
 	} else if (valueOperator(listNode, &(token.symbol))) {
 		*treeNode = newExpTreeNode(SYMBOL, token);
+		// (if going with ) linking nodes together should be done here
 		if (!treePrefixExpression(listNode, &((*treeNode)->left)) ||
-		!treePrefixExpression(listNode, &((*treeNode)->right))) {
+		!treePrefixExpression(listNode, &((*treeNode)->right))) { // what exatly is this checking??
 			return 0;
 		}
 	}

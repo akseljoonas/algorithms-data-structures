@@ -1,6 +1,6 @@
 CC = gcc
 
-CFLAGS = -g -O2 -std=c99 -pedantic -Wall -lm
+CFLAGS = -O2 -std=c99 -pedantic -Wall -lm
 
 speller: dictionary.h dictionary.c speller.c
 	$(CC) $(CFLAGS) $^ -o $@

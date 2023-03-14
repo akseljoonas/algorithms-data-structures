@@ -1,9 +1,22 @@
-// implements a dictionary
+// file        : dictionary.c
+// author      : Mihkel Mariusz Jezierski (s4787730) && Aksel Joonas Reedi (s4790820)
+// date        : Tue Mar 07 2023
+
+/* description of the program: This part of the code implements the word
+addition to the dictionary, checks if certain words are in the dictionary and the creation of trie nodes*/
 
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+<<<<<<< HEAD
+#include "dictionary.h"
+
+// a trie node, which has a child node for each letter in alphabet
+struct trieNode {	
+	bool isEndNode;
+	Trie *children[26];
+=======
 #include <stdbool.h>
 
 #include "dictionary.h"
@@ -20,48 +33,64 @@ struct dictonary {
 	int numWords;
 	int maxWords;
 	char **words;
+>>>>>>> 05ae4af2bb9fa69be9126e3ddf1a11a0dc5a3121
 };
 
-Dictionary *newEmptyDictionary() {
-	Dictionary *dictionary = malloc(sizeof(Dictionary));
-	assert(dictionary != NULL);
-	dictionary->numWords = 0;
-	dictionary->maxWords = 1;
-	dictionary->words = malloc(dictionary->maxWords * sizeof(char *));
-	return dictionary;
+// creating a new trie node and setting all child nodes to NULL
+Trie *newTrieNode() {
+	Trie *trie = malloc(sizeof(Trie));
+	assert(trie != NULL);
+	trie->isEndNode = 0;
+	for (int i = 0; i < 26; i++) {
+		trie->children[i] = NULL;
+	}
+	return trie;
 }
 
-// add word to the dictionary if it is is not already known
-void addWord(const char *word, Dictionary *dictionary) {
-	if (!check(word, dictionary)) {
-		// if we need more space before adding the word, double the size
-		if (dictionary->numWords == dictionary->maxWords) {
-			dictionary->maxWords *= 2;
-			dictionary->words = realloc(dictionary->words,dictionary->maxWords * (sizeof(char *)));
-			assert(dictionary->words != NULL);
+// add a word to the dictionary trie.
+void addWord(const char *word, Trie *trie) {
+	/* Temporary trie pointer is made, so it can be moved to add words, 
+	and be resetted when next word is going to be added */
+	Trie *tempTrie = trie; 
+	int index = 0;
+	// for each letter equivalent node children is assigned to next letters node pointer
+	while (word[index] != '\0'){
+		int letter = (int)(word[index] - 'a');
+		if (tempTrie->children[letter] == NULL){
+			tempTrie->children[letter] = newTrieNode();
 		}
-		
-		// now we actually add the word
-		dictionary->words[dictionary->numWords] = malloc((LENGTH + 1) * sizeof(char));
-		strcpy(dictionary->words[dictionary->numWords], word);
-		dictionary->numWords++;
+		tempTrie = tempTrie->children[letter];
+		index++;
 	}
+	// isEndNode indicates if the node is a leaf ndoe
+	tempTrie->isEndNode = 1;
 }
 
-// check whether word is in dictionary
-bool check(const char *word, Dictionary *dictionary) {
-	for (int i = 0; i < dictionary->numWords; i++) {
-		if (strcmp(dictionary->words[i], word) == 0) {
-			return true;
+// check whether word is in dictionary trie, by checking each chars node children, and every next chars equivalent children
+bool check(const char *word, Trie *trie) {
+	Trie *tempTrie = trie;
+	for(int i = 0; i < strlen(word); i++) {
+		int letter = (int)(word[i] - 'a');
+		if (tempTrie->children[letter] != NULL) {
+			tempTrie = tempTrie->children[letter];
+		} else {
+			return 0;
 		}
 	}
-	return false;
+	// the word is in a dictionary if the checker arrives to EndNode, thus recognizing each char in a word
+	if (tempTrie->isEndNode == 1) {
+		return 1;
+	}
+
+	return 0;
 }
 
-void freeDictionary(Dictionary *dictionary) {
-	for (int i = 0; i < dictionary->numWords; i++) {
-		free(dictionary->words[i]);
+void freeTrie(Trie *n) {
+	
+	for (int i = 0; i < 26; i++) {
+		if (n->children[i] != NULL) {
+			freeTrie(n->children[i]);
+		}
 	}
-	free(dictionary->words);
-	free(dictionary);
+	free(n);
 }
