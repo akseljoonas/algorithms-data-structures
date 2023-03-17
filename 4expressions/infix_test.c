@@ -2,6 +2,6 @@
 #include "infixExp.h"
 
 int main(int argc, char *argv[]) {
-	prefExpTrees();
+	doExpTrees();
 	return 0;
 }

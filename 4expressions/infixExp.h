@@ -22,5 +22,11 @@ void printExpTreeInfix(ExpTree *tree);
 void prefExpTrees();
 void freeExpTree(ExpTree *treeNode);
 int isOperator(char c);
+int acceptTreeSymbol(char symbol, List **list, ExpTree **tree);
+int acceptTreeIdentifier(List **list, ExpTree **tree);
+int acceptTreeNumber(List **list, ExpTree **tree);
+int treeFactor(List **list, ExpTree **tree );
+int treeTerm(List **list, ExpTree **tree);
+int treeExpression(List **list, ExpTree **tree);
 
 #endif

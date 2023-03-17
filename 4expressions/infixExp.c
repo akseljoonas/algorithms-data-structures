@@ -8,7 +8,7 @@
 #include "infixExp.h"
 
 int valueNumber(List **list, double *value);
-
+/*
 ExpTree *newExpTreeNode(TokenType type, Token token) {
 	ExpTree *newNode = malloc(sizeof(ExpTree));
 	assert(newNode != NULL);
@@ -51,27 +51,6 @@ void freeExpTree(ExpTree *treeNode) {
 	free(treeNode);
 }
 
-int treePrefixExpression(List **listNode, ExpTree **treeNode) {
-	if (listNode == NULL || *listNode == NULL) {
-		return 0;
-	}
-	Token token;
-	double value;
-	if (valueNumber(listNode, &value)) {
-		token.number = (int)value;
-		*treeNode = newExpTreeNode(NUMBER, token);
-	} else if (valueIdentifier(listNode, &(token.identifier))) {
-		*treeNode = newExpTreeNode(IDENTIFIER, token);
-	} else if (valueOperator(listNode, &(token.symbol))) {
-		*treeNode = newExpTreeNode(SYMBOL, token);
-		// (if going with ) linking nodes together should be done here
-		if (!treePrefixExpression(listNode, &((*treeNode)->left)) ||
-		!treePrefixExpression(listNode, &((*treeNode)->right))) { // what exatly is this checking??
-			return 0;
-		}
-	}
-	return 1;
-}
 
 void printExpTreeInfix(ExpTree *tree) {
 	if (tree == NULL) {
@@ -105,7 +84,7 @@ int isNumerical(ExpTree *tree) {
 	return (isNumerical(tree->left) && isNumerical(tree->right));
 }
 
-/* precondition: isNumerical(tr)) */
+/* precondition: isNumerical(tr)) 
 double valueExpTree(ExpTree *treeNode) {
 	assert(treeNode != NULL);
 	if (treeNode->type == NUMBER) {
@@ -128,51 +107,137 @@ double valueExpTree(ExpTree *treeNode) {
 		exit(EXIT_FAILURE);
 	}
 }
+*/
 
-int acceptFactor(List **list) {
-	if (acceptNumber(list)) {
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+
+int acceptBracket(char symbol, List **list, ExpTree **tree){
+	if (*list != NULL && (*list)->type == SYMBOL && ((*list)->token).symbol == '(' || *list != NULL && (*list)->type == SYMBOL && ((*list)->token).symbol == ')') {
 		
+		
+		if ((*list)->next != NULL) {
+			*list = (*list)->next;
+		}
+
 		return 1;
-	}
-	if (acceptIdentifier(list)) {
-		return 1;
-	}
-	if (acceptSymbol('(', list)) {
-		return acceptExpression(list) && acceptSymbol(')', list);
 	}
 	return 0;
 }
 
-int acceptTerm(List **list)  { // pass down a tree
-	if (!acceptFactor(list)) { // build a factor
+int acceptTreeSymbol(char symbol, List **list, ExpTree **tree) {
+	
+
+	if (*list != NULL && (*list)->type == SYMBOL && ((*list)->token).symbol == symbol) {
+		*tree = newExpTreeNode(SYMBOL, (*list)->token);
+
+		*list = (*list)->next;
+		return 1;
+	}
+	return 0;
+}
+
+int acceptTreeIdentifier(List **list, ExpTree **tree) {
+	if (*list != NULL && (*list)->type == IDENTIFIER) {
+		*tree = newExpTreeNode(IDENTIFIER, (*list)->token);
+		*list = (*list)->next;
+		return 1;
+	}
+	return 0;
+}
+
+int acceptTreeNumber(List **list, ExpTree **tree) {
+
+
+	if (*list != NULL && (*list)->type == NUMBER) {
+
+
+		*tree = newExpTreeNode(NUMBER, (*list)->token);
+		*list = (*list)->next;
+		return 1;
+	}
+
+
+	return 0;
+}
+
+int treeFactor(List **list, ExpTree **tree ) {
+	if (acceptTreeNumber(list, tree)) {
+
+
+		return 1;
+	}
+	if (acceptTreeIdentifier(list, tree)) {
+		return 1;
+	}
+	if (acceptBracket('(', list, tree)) {
+
+
+		ExpTree *expression = NULL;
+		treeExpression(list, &expression);
+
+		*tree = expression;
+		acceptBracket(')', list, tree);
+		return 1;
+	}
+	return 0;
+}
+
+int treeTerm(List **list, ExpTree **tree)  { // pass down a tree
+
+
+	if (!treeFactor(list, tree)) { // build a factor
 		return 0;
 	}
-	while (acceptSymbol('*', list) || acceptSymbol('/', list)) { 
+	ExpTree *leftBranchTree = NULL; 
+	while (acceptTreeSymbol('*', list, &leftBranchTree) || acceptTreeSymbol('/', list, &leftBranchTree)) { 
 		// If we encounter a * or /, 
+		leftBranchTree->left = *tree;
+
 		// it must be followed by another term
-		if (!acceptFactor(list)) {
+
+
+		if (!treeFactor(list, &(leftBranchTree)->right)) {
 			return 0;
 		}
+		*tree = leftBranchTree;
 	}
 	return 1;
 }
 
-int acceptExpression(List **list) {
-	if (!acceptTerm(list)) {
+int treeExpression(List **list, ExpTree **tree) {
+
+	
+	if (!treeTerm(list, tree)) {
 		return 0;
 	}
-	while (acceptSymbol('+', list) || acceptSymbol('-', list)) {
-		// If we encounter a + or -, 
+	ExpTree *leftBranchTree = NULL; 
+
+	
+	while (acceptTreeSymbol('+' ,list , &leftBranchTree) || acceptTreeSymbol('-',list ,&leftBranchTree)) {
+		// If we encounter a + or -,
+		leftBranchTree->left = *tree;
 		// it must be followed by another term
-		if (!acceptTerm(list)) {
+
+
+		if (!treeTerm(list, &(leftBranchTree)->right)) {
 			return 0;
 		}
+
+
+
+		*tree = leftBranchTree;
 	}
+
 	return 1;
 }
 
 
-void prefExpTrees() {
+void doExpTrees() {
 	char *ar;
 	List *list;
 	printf("give an expression: ");
@@ -182,17 +247,18 @@ void prefExpTrees() {
 		printList(list);
 		List *listPosition = list;
 		ExpTree *tree = NULL;
-		if (treePrefixExpression(&listPosition, &tree) && listPosition == NULL) { // if can create tree
+		if (acceptExpression(&listPosition) && listPosition == NULL && treeExpression(&list, &tree) /* create the tree*/ ) {
+
 			printf("the formula is ");
 			printExpTreeInfix(tree); // print tree in infix notation
 			printf("\n");
 			if (!isNumerical(tree)) { // look though tree and check that does not have x y z 
-				printf("this is not a numerical prefix expression\n");
+				printf("this is not a numerical infix expression\n");
 			} else {
 				printf("the formula evaluates to %f\n", valueExpTree(tree)); // actual calculations
 			}
 		} else {
-			printf("this is not a valid prefix expression\n");
+			printf("this is not a valid infix expression\n");
 		}
 		freeExpTree(tree);
 		free(ar);
@@ -203,3 +269,5 @@ void prefExpTrees() {
 	free(ar);
 	printf("good bye\n");
 }
+
+
