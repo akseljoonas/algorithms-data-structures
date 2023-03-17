@@ -5,121 +5,97 @@
 #include "scanner.h"
 #include "recognizeExp.h"
 #include "evalExp.h"
+#include "prefixExp.h"
 #include "infixExp.h"
 
+
 int valueNumber(List **list, double *value);
-/*
-ExpTree *newExpTreeNode(TokenType type, Token token) {
-	ExpTree *newNode = malloc(sizeof(ExpTree));
-	assert(newNode != NULL);
-	newNode->type = type;
-	newNode->token = token;
-	newNode->left = NULL;
-	newNode->right = NULL;
-	return newNode;
+
+void simplify(ExpTree **treeNode){
+	// recursion base case
+	if ((*treeNode) == NULL){
+		return; 
+	}
+
+	// go to bottom logic
+	simplify (&(*treeNode)->left);
+	simplify (&(*treeNode)->right);
+
+	// do simplification logic
+
+	// if *
+	if (((*treeNode)->token).symbol == '*'){
+		//if e*0 or 0*e
+		if ((((*treeNode)->left)->token).number == 0){
+			
+			*treeNode = (*treeNode)->left;
+			return;
+			
+			/*ExpTree *tempNode = (*treeNode)->left;
+			free((*treeNode)->left);
+			free((*treeNode)->right);
+			*treeNode = tempNode;
+			free(tempNode);
+			return;*/
+		}
+		if ((((*treeNode)->right)->token).number == 0){
+			*treeNode = (*treeNode)->right;
+			return;
+		}
+		// if e*1 or 1*e
+		if ((((*treeNode)->left)->token).number == 1){
+			*treeNode = (*treeNode)->right;
+			return;
+		}
+		if ((((*treeNode)->right)->token).number == 1){
+			*treeNode = (*treeNode)->left;
+			return;
+		}
+	}
+
+	// if /
+	if (((*treeNode)->token).symbol == '/'){
+		//if e/1
+		if ((((*treeNode)->right)->token).number == 1){
+			*treeNode = (*treeNode)->left;
+			return;
+		}
+	}
+
+	// if + 
+	if (((*treeNode)->token).symbol == '+'){
+		//if e+0 or 0+e
+		if ((((*treeNode)->left)->token).number == 0){
+			*treeNode = (*treeNode)->right;
+			return;
+
+		}
+		if ((((*treeNode)->right)->token).number == 0){
+			*treeNode = (*treeNode)->left;
+			return;
+
+		}
+	}
+
+	// if -
+	if (((*treeNode)->token).symbol == '-'){
+		//if e-0
+		if ((((*treeNode)->right)->token).number == 0){
+			*treeNode = (*treeNode)->left;
+			return;
+
+		}
+	}
+
+
+	// free node
+	//free(treeNode);
+
 }
 
-int valueIdentifier(List **list, char **pString) {
-	if (*list != NULL && (*list)->type == IDENTIFIER) {
-		*pString = ((*list)->token).identifier;
-		*list = (*list)->next;
-		return 1;
-	}
-	return 0;
-}
-
-int isOperator(char c) {
-	return (c == '+' || c == '-' || c == '*' || c == '/');
-}
-
-int valueOperator(List **list, char *operator) {
-	if (*list != NULL && (*list)->type == SYMBOL
-	                  && isOperator(((*list)->token).symbol) ) {
-		*operator = ((*list)->token).symbol;
-		*list = (*list)->next;
-		return 1;
-	}
-	return 0;
-}
-
-void freeExpTree(ExpTree *treeNode) {
-	if (treeNode == NULL) {
-		return;
-	}
-	freeExpTree(treeNode->left);
-	freeExpTree(treeNode->right);
-	free(treeNode);
-}
-
-
-void printExpTreeInfix(ExpTree *tree) {
-	if (tree == NULL) {
-		return;
-	}
-	switch (tree->type) {
-		case NUMBER:
-			printf("%i",(tree->token).number);
-			break;
-		case IDENTIFIER:
-			printf("%s",(tree->token).identifier);
-			break;	
-		case SYMBOL:
-			printf("(");
-			printExpTreeInfix(tree->left);
-			printf(" %c ",(tree->token).symbol);
-			printExpTreeInfix(tree->right);
-			printf(")");
-			break;
-	}
-}
-
-int isNumerical(ExpTree *tree) {
-	assert(tree != NULL);
-	if (tree->type == NUMBER) {
-		return 1;
-	}
-	if (tree->type == IDENTIFIER) {
-		return 0;
-	}
-	return (isNumerical(tree->left) && isNumerical(tree->right));
-}
-
-/* precondition: isNumerical(tr)) 
-double valueExpTree(ExpTree *treeNode) {
-	assert(treeNode != NULL);
-	if (treeNode->type == NUMBER) {
-		return (treeNode->token).number;
-	}
-	double leftValue = valueExpTree(treeNode->left);
-	double rightValue = valueExpTree(treeNode->right);
-	switch ((treeNode->token).symbol) {
-		case '+':
-		return (leftValue + rightValue);
-		case '-':
-		return (leftValue - rightValue);
-		case '*':
-		return (leftValue * rightValue);
-		case '/':
-		assert(rightValue != 0);
-		return (leftValue / rightValue);
-		default:
-		printf("Unrecognized operator '%c'.\n", (treeNode->token).symbol);
-		exit(EXIT_FAILURE);
-	}
-}
-*/
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
 
 int acceptBracket(char symbol, List **list, ExpTree **tree){
-	if (*list != NULL && (*list)->type == SYMBOL && ((*list)->token).symbol == '(' || *list != NULL && (*list)->type == SYMBOL && ((*list)->token).symbol == ')') {
-		
-		
+	if ((*list != NULL && (*list)->type == SYMBOL && ((*list)->token).symbol == '(') || (*list != NULL && (*list)->type == SYMBOL && ((*list)->token).symbol == ')')) {
 		if ((*list)->next != NULL) {
 			*list = (*list)->next;
 		}
@@ -254,6 +230,11 @@ void doExpTrees() {
 			printf("\n");
 			if (!isNumerical(tree)) { // look though tree and check that does not have x y z 
 				printf("this is not a numerical infix expression\n");
+				printf("simplified: ");
+				simplify(&tree); //simplify tree
+				printExpTreeInfix(tree); // print tree in infix notation
+
+				printf("\n");
 			} else {
 				printf("the formula evaluates to %f\n", valueExpTree(tree)); // actual calculations
 			}
