@@ -5,7 +5,6 @@
 
 typedef struct expTreeNode ExpTree;
 
-
 ExpTree *newExpTreeNode(TokenType type, Token token);
 int acceptTreeSymbol(char symbol, List **list, ExpTree **tree);
 int acceptTreeIdentifier(List **list, ExpTree **tree);
