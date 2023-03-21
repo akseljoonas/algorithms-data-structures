@@ -41,94 +41,19 @@ int deriveNode(ExpTree **treeNode) {
 */
 
 	if ((*treeNode)->type == IDENTIFIER){
+		(*treeNode)->type = NUMBER;
+
 		if (!strcmp(((*treeNode)->token).identifier, "x")) { // loodame et on õige
-			(*treeNode)->type = NUMBER;
 			return 1;
 		}
 	}
 	return 0;
-	
-
-
-	// switch ((*treeNode)->type) {
-	// 	case IDENTIFIER :
-	// 		if (!strcmp(((*treeNode)->token).identifier,'x')) { // loodame et on õige
-	// 			return 1;
-	// 		} else {
-	// 			return 0;
-	// 		}
-	// 		break;
-	// 	case NUMBER :
-	// 		return 0;
-	// 		break;
-	// }
 
 }
 
 
 
 void differentiate(ExpTree **treeNode){
-
-
-	/*
-	// base check
-	if ((*treeNode) == NULL){
-		return; 
-	}
-	
-	// simple derivative check
-	if (treeNode == Identifier || treeNode == Number) {
-		deriveNode(treeNode);
-		return;
-	}
-
-	if (((*treeNode)->token).symbol == '+ või -'){ 
-		currentLeft = differentiate(currentLeft);
-		currentRight = differentiate(currentRight);
-	}
-
-
-	if (((*treeNode)->token).symbol == '*'){ 
-		A = currentLeft
-		B = currentRight
-
-		uus tree
-		createNode +
-		createLeft *
-			createLeftLeft differentiate(A)
-			createLeftRight B
-		createRight *
-			createRightLeft differentiate(B)
-			createRightRight A
-
-		(*treeNode) = uus tree
-
-	}
-
-	if (((*treeNode)->token).symbol == '/'){ 
-		A = currentLeft;
-		B = currentRight;
-		Aprime = A;
-		Bprime = B;
-		differentiate(Aprime);
-		differentiate(Bprime);
-		uus tree
-		createNode /
-			createNodeLeft -
-				createNodeLeftLeft *
-					createNodeLeftLeftLeft Aprime;
-					createNodeLeftLeftRight B
-				createNodeLeftRight *
-					createNodeLeftRightLeft Bprime;
-					createNodeLeftRightRight A
-			createNodeRight *
-				createNodeRightLeft A
-				createNodeRightRight A
-	}
-
-	kõige lõpus simplifyWholeWAdeva
-	
-	*/
 
 
 	// recursion base case
@@ -144,6 +69,7 @@ void differentiate(ExpTree **treeNode){
 
 
 	if (((*treeNode)->token).symbol == '+' || ((*treeNode)->token).symbol == '-' ){ 
+
 		differentiate(&(*treeNode)->left); // currentLeft = differentiate((*treeNode)->left);
 		differentiate(&(*treeNode)->right); //currentRight = differentiate((*treeNode)->right);
 	}
@@ -205,13 +131,18 @@ void differentiate(ExpTree **treeNode){
 
 			// 	createRightLeft differentiate(B)
 			(tempTree->right) = newExpTreeNode(SYMBOL, temp);
-			((tempTree->right)->left) = bPrime;
+			((tempTree->right)->left) = a;
 
 			// 	createRightRight A
-			((tempTree->right)->right) = a;
+			((tempTree->right)->right) = bPrime;
 		
 		// (*treeNode) = uus tree
-		*treeNode = tempTree;
+		makeTreeCopy(&tempTree, treeNode);
+		freeExpTree(a);
+		freeExpTree(b);
+		freeExpTree(bPrime);
+		freeExpTree(aPrime);
+		//freeExpTree(tempTree);
 	}
 
 	if (((*treeNode)->token).symbol == '/'){
@@ -241,19 +172,6 @@ void differentiate(ExpTree **treeNode){
 
 		differentiate(&bPrime);
 
-
-		// printf("\nprint a: ");
-		// printExpTreeInfix(a);
-		// printf("type: %d\n", a->type);
-		// printf("\nprint aPrime: ");
-		// printExpTreeInfix(aPrime);
-		// printf("\nprint b: ");
-		// printExpTreeInfix(b);
-		// printf("type: %d\n", b->type);
-		// printf("\nprint bPrime: ");
-		// printExpTreeInfix(bPrime);
-		// printf("\n");
-
 		// new tree
 		ExpTree *tempTree = NULL;
 	
@@ -271,63 +189,18 @@ void differentiate(ExpTree **treeNode){
 			(((tempTree->left)->left)->left) = aPrime;
 			(((tempTree->left)->left)->right) = b;
 			((tempTree->left)->right) = newExpTreeNode(SYMBOL,temp );
-			(((tempTree->left)->right)->left) = bPrime;
-			(((tempTree->left)->right)->right) = a;
+			(((tempTree->left)->right)->left) = a;
+			(((tempTree->left)->right)->right) = bPrime;
 			(tempTree->right) = newExpTreeNode(SYMBOL, temp);
 			((tempTree->right)->left) = b;
 			((tempTree->right)->right) = b;
-			*treeNode = tempTree;
+			makeTreeCopy(&tempTree, treeNode);
+			freeExpTree(a);
+			freeExpTree(b);
+			freeExpTree(bPrime);
+			freeExpTree(aPrime);
+			//freeExpTree(tempTree);
 	}
-	/*
-	if (((*treeNode)->token).symbol == '/'){ 
-		A = currentLeft;
-		B = currentRight;
-		Aprime = A;
-		Bprime = B;
-		differentiate(Aprime);
-		differentiate(Bprime);
-		uus tree
-		createNode /
-			createNodeLeft -
-				createNodeLeftLeft *
-					createNodeLeftLeftLeft Aprime;
-					createNodeLeftLeftRight B
-				createNodeLeftRight *
-					createNodeLeftRightLeft Bprime;
-					createNodeLeftRightRight A
-			createNodeRight *
-				createNodeRightLeft A
-				createNodeRightRight A
-	}
-	
-
-	if (((*treeNode)->token).symbol == '/'){ 
-
-		// A = currentLeft;
-		ExpTree *a = (*treeNode)->left;
-
-
-		// B = currentRight;
-		ExpTree *b = (*treeNode)->right;
-		// Aprime = A;
-		ExpTree *aPrime = NULL;
-
-
-		makeTreeCopy(&a, &aPrime);
-
-	
-		differentiate(&aPrime);
-
-
-		// Bprime = B;
-		ExpTree *bPrime = NULL;
-		makeTreeCopy(&b, &bPrime);
-
-
-		differentiate(&bPrime);
-		
-
-	}*/
 }
 
 
@@ -347,7 +220,7 @@ void simplify(ExpTree **treeNode){
 	// do simplification logic
 
 	// if *
-	if (((*treeNode)->token).symbol == '*'){
+	if ( (*treeNode)->type == SYMBOL && ((*treeNode)->token).symbol == '*'){
 		//if e*0 or 0*e
 		if ((((*treeNode)->left)->token).number == 0){
 			
@@ -377,7 +250,7 @@ void simplify(ExpTree **treeNode){
 	}
 
 	// if /
-	if (((*treeNode)->token).symbol == '/'){
+	if ((*treeNode)->type == SYMBOL && ((*treeNode)->token).symbol == '/'){
 		//if e/1
 		if ((((*treeNode)->right)->token).number == 1){
 			*treeNode = (*treeNode)->left;
@@ -386,7 +259,7 @@ void simplify(ExpTree **treeNode){
 	}
 
 	// if + 
-	if (((*treeNode)->token).symbol == '+'){
+	if ((*treeNode)->type == SYMBOL && ((*treeNode)->token).symbol == '+'){
 		//if e+0 or 0+e
 		if ((((*treeNode)->left)->token).number == 0){
 			*treeNode = (*treeNode)->right;
@@ -401,7 +274,7 @@ void simplify(ExpTree **treeNode){
 	}
 
 	// if -
-	if (((*treeNode)->token).symbol == '-'){
+	if ((*treeNode)->type == SYMBOL && ((*treeNode)->token).symbol == '-'){
 		//if e-0
 		if ((((*treeNode)->right)->token).number == 0){
 			*treeNode = (*treeNode)->left;
@@ -543,7 +416,7 @@ void doExpTrees() {
 	ar = readInput();
 	while (ar[0] != '!') {
 		list = tokenList(ar); // ?? 
-		//printList(list);
+		printList(list);
 		List *listPosition = list;
 		ExpTree *tree = NULL;
 		if (acceptExpression(&listPosition) && listPosition == NULL && treeExpression(&list, &tree) /* create the tree*/ ) {
@@ -571,7 +444,7 @@ void doExpTrees() {
 		} else {
 			printf("this is not a valid infix expression\n");
 		}
-		//freeExpTree(tree);
+		freeExpTree(tree);
 		free(ar);
 		freeTokenList(list);
 		printf("\ngive an expression: "); // for next expression

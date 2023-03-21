@@ -1,93 +1,20 @@
-/* file   : recognizeExp.c */
-/* author : Harmen de Weerd (harmen.de.weerd@rug.nl) */
-
-/* Description:
- * Implementation of recognition of simple 
- * calculation expressions.
- */
-
-#include <stdlib.h>
-#include "scanner.h"
-#include "scannerStructs.h"
-#include "recognizeExp.h"
-
-int acceptSymbol(char symbol, List **list) {
-	if (*list != NULL && (*list)->type == SYMBOL && ((*list)->token).symbol == symbol) {
-		*list = (*list)->next;
-		return 1;
-	}
-
-	// uus tree, vana tree uue tree vasak node
-	return 0;
-}
-
-int acceptIdentifier(List **list) {
-	if (*list != NULL && (*list)->type == IDENTIFIER) {
-		*list = (*list)->next;
-		return 1;
-	}
-	return 0;
-}
-
-int acceptNumber(List **list) {
-	if (*list != NULL && (*list)->type == NUMBER) {
-		*list = (*list)->next;
-		return 1;
-	}
-	return 0;
-}
-
-int acceptFactor(List **list) {
-	if (acceptNumber(list)) {
-		
-		return 1;
-	}
-	if (acceptIdentifier(list)) {
-		return 1;
-	}
-	if (acceptSymbol('(', list)) {
-		return acceptExpression(list) && acceptSymbol(')', list);
-	}
-	return 0;
-}
-
-int acceptTerm(List **list)  { // pass down a tree
-	// treeFactor(list, tree);
-	if (!acceptFactor(list)) { // build a factor
-		return 0;
-	}
-	while (acceptSymbol('*', list) || acceptSymbol('/', list)) { 
-		// If we encounter a * or /, 
-		// it must be followed by another term	
-		
-
-		// *treeNode = newExpTreeNode(SYMBOL, token); // et recordida * märki 
-		// *treeNode->left = currentTree; // kogu tree siia maani läheb vasakuks childiks
-		
-		if (!acceptFactor(list)) {
-			return 0;
-		}
-		// *treeNode->right = treeFactor(list, tree);
-	}
-	return 1;
-}
-
-int treeExpression(List **list) {
-	// treeTerm(list, tree); // et saada kätte esimene term (2)
-	if (!acceptTerm(list)) {
-		return 0;
-	}
-
-	while (acceptSymbol('+', list, tree) || acceptSymbol('-', list,tree)) {
-		// If we encounter a + or -,
-		// it must be followed by another term
-		// *treeNode = newExpTreeNode(SYMBOL, token); // et recordida esimene +
-		// *treeNode->left = tree;
-
-		//*treeNode -> right = treeTerm(list, tree);
-		if (!acceptTerm(list, tree.right)) {
-			return 0;
-		}
-	}
-	return 1;
-}
+a
+X
+x1
+x
+x + 45
+X+x
+x-45
+X - x
+x*a
+a*x
+3*X
+x/7
+7/x
+a/7
+7/x1
+(x+2)+(4*x*x-5)
+(x+2)-(4*x*x-5)
+(x+2)*(4*x*x-5)
+(x+2)/(4*x*x-5)
+!
