@@ -41,14 +41,12 @@ int deriveNode(ExpTree **treeNode) {
 */
 
 	if ((*treeNode)->type == IDENTIFIER){
-		if (!strcmp(((*treeNode)->token).identifier,"x")) { // loodame et on õige
+		(*treeNode)->type = NUMBER;
+
+		if (!strcmp(((*treeNode)->token).identifier, "x")) { // loodame et on õige
 			return 1;
-		} else {
-			return 0;
 		}
 	}
-
-	
 	return 0;
 	
 
@@ -156,11 +154,13 @@ void differentiate(ExpTree **treeNode){
 	
 		
 		// A = currentLeft;
-		ExpTree *a = (*treeNode)->left;
+		ExpTree *a = NULL;
+		makeTreeCopy(&(*treeNode)->left, &a);
 
 
 		// B = currentRight;
-		ExpTree *b = (*treeNode)->right;
+		ExpTree *b = NULL; 
+		makeTreeCopy(&(*treeNode)->right, &b);
 		// Aprime = A;
 		ExpTree *aPrime = NULL;
 
@@ -213,6 +213,71 @@ void differentiate(ExpTree **treeNode){
 		
 		// (*treeNode) = uus tree
 		*treeNode = tempTree;
+	}
+
+	if (((*treeNode)->token).symbol == '/'){
+	
+		// A = currentLeft;
+		ExpTree *a = NULL;
+		makeTreeCopy(&(*treeNode)->left, &a);
+
+
+		// B = currentRight;
+		ExpTree *b = NULL; 
+		makeTreeCopy(&(*treeNode)->right, &b);
+		// Aprime = A;
+		ExpTree *aPrime = NULL;
+
+
+		makeTreeCopy(&a, &aPrime);
+
+	
+		differentiate(&aPrime);
+
+
+		// Bprime = B;
+		ExpTree *bPrime = NULL;
+		makeTreeCopy(&b, &bPrime);
+
+
+		differentiate(&bPrime);
+
+
+		// printf("\nprint a: ");
+		// printExpTreeInfix(a);
+		// printf("type: %d\n", a->type);
+		// printf("\nprint aPrime: ");
+		// printExpTreeInfix(aPrime);
+		// printf("\nprint b: ");
+		// printExpTreeInfix(b);
+		// printf("type: %d\n", b->type);
+		// printf("\nprint bPrime: ");
+		// printExpTreeInfix(bPrime);
+		// printf("\n");
+
+		// new tree
+		ExpTree *tempTree = NULL;
+	
+		// createNode +
+		Token temp;
+		temp.symbol = '/';
+		tempTree = newExpTreeNode(SYMBOL,temp );
+		
+		temp.symbol = '-';
+
+
+			(tempTree->left) = newExpTreeNode(SYMBOL, temp);
+			temp.symbol = '*';
+			((tempTree->left)->left) = newExpTreeNode(SYMBOL,temp );
+			(((tempTree->left)->left)->left) = aPrime;
+			(((tempTree->left)->left)->right) = b;
+			((tempTree->left)->right) = newExpTreeNode(SYMBOL,temp );
+			(((tempTree->left)->right)->left) = bPrime;
+			(((tempTree->left)->right)->right) = a;
+			(tempTree->right) = newExpTreeNode(SYMBOL, temp);
+			((tempTree->right)->left) = b;
+			((tempTree->right)->right) = b;
+			*treeNode = tempTree;
 	}
 	/*
 	if (((*treeNode)->token).symbol == '/'){ 
@@ -507,7 +572,7 @@ void doExpTrees() {
 		} else {
 			printf("this is not a valid infix expression\n");
 		}
-		freeExpTree(tree);
+		//freeExpTree(tree);
 		free(ar);
 		freeTokenList(list);
 		printf("\ngive an expression: "); // for next expression
@@ -516,5 +581,3 @@ void doExpTrees() {
 	free(ar);
 	printf("good bye\n");
 }
-
-
