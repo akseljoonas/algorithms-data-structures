@@ -81,7 +81,7 @@ void differentiate(ExpTree **treeNode){
 	
 	// simple derivative check
 	if (treeNode == Identifier || treeNode == Number) {
-		deriveNode (treeNode);
+		deriveNode(treeNode);
 		return;
 	}
 
@@ -147,7 +147,6 @@ void differentiate(ExpTree **treeNode){
 
 
 	if (((*treeNode)->token).symbol == '+' || ((*treeNode)->token).symbol == '-' ){ 
-		printf(" + - check %c\n", ((*treeNode)->token).symbol);
 		differentiate(&(*treeNode)->left); // currentLeft = differentiate((*treeNode)->left);
 		differentiate(&(*treeNode)->right); //currentRight = differentiate((*treeNode)->right);
 	}
@@ -182,27 +181,31 @@ void differentiate(ExpTree **treeNode){
 		
 		// new tree
 		ExpTree *tempTree = NULL;
+
 		// createNode +
-		printf("SEGMENTATION FOULT HERE LOL\n");
-		tempTree = newExpTreeNode(SYMBOL, tempTree->token);
+		Token temp;
+		temp.symbol = '+';
+		tempTree = newExpTreeNode(SYMBOL,temp );
 		
-		(tempTree->token).symbol = '+';
 		
+		//printf("SEGMENTATION FOULT HERE LOL\n");
 
 		// createLeft *
-		((tempTree->left)->token).symbol = '*';
+		temp.symbol = '*';
+
+		//((tempTree->left)->token).symbol = '*';
 
 			// 	createLeftLeft differentiate(A)
-			(tempTree->left) = newExpTreeNode(SYMBOL, ((tempTree->left)->token));
+			(tempTree->left) = newExpTreeNode(SYMBOL, temp);
 			((tempTree->left)->left) = aPrime;
 
 			// 	createLeftRight B
 			((tempTree->left)->right) = b;
 		
 		// createRight *
-		((tempTree->right)->token).symbol = '*';
+
 			// 	createRightLeft differentiate(B)
-			(tempTree->right) = newExpTreeNode(SYMBOL, ((tempTree->right)->token));
+			(tempTree->right) = newExpTreeNode(SYMBOL, temp);
 			((tempTree->right)->left) = bPrime;
 
 			// 	createRightRight A
@@ -211,9 +214,56 @@ void differentiate(ExpTree **treeNode){
 		// (*treeNode) = uus tree
 		*treeNode = tempTree;
 	}
-
+	/*
+	if (((*treeNode)->token).symbol == '/'){ 
+		A = currentLeft;
+		B = currentRight;
+		Aprime = A;
+		Bprime = B;
+		differentiate(Aprime);
+		differentiate(Bprime);
+		uus tree
+		createNode /
+			createNodeLeft -
+				createNodeLeftLeft *
+					createNodeLeftLeftLeft Aprime;
+					createNodeLeftLeftRight B
+				createNodeLeftRight *
+					createNodeLeftRightLeft Bprime;
+					createNodeLeftRightRight A
+			createNodeRight *
+				createNodeRightLeft A
+				createNodeRightRight A
+	}
 	
 
+	if (((*treeNode)->token).symbol == '/'){ 
+
+		// A = currentLeft;
+		ExpTree *a = (*treeNode)->left;
+
+
+		// B = currentRight;
+		ExpTree *b = (*treeNode)->right;
+		// Aprime = A;
+		ExpTree *aPrime = NULL;
+
+
+		makeTreeCopy(&a, &aPrime);
+
+	
+		differentiate(&aPrime);
+
+
+		// Bprime = B;
+		ExpTree *bPrime = NULL;
+		makeTreeCopy(&b, &bPrime);
+
+
+		differentiate(&bPrime);
+		
+
+	}*/
 }
 
 
